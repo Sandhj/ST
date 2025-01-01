@@ -23,7 +23,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-HOSTING="LINK_GITHUB_KALIAN"
+HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 #======================================== START SCRIPT =============================================
 # Fungsi untuk memvalidasi domain
 validate_domain() {
