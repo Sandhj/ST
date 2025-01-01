@@ -23,7 +23,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-HOSTING="LINK_GITHUB_KALIAN"
+HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 #======================================== START SCRIPT =============================================
 # Update package list
 print_msg $YB "PERBAHARUI PAKET. . ."
@@ -360,6 +360,7 @@ wget -q ${HOSTING}/traffic.py
 cd
 chmod +x /root/san/*
 mv /root/san/* /usr/bin/
+rm -r /root/san
 
 cd
 echo "0 0 * * * root xp" >> /etc/crontab
