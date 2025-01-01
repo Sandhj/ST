@@ -25,6 +25,36 @@ fi
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 #======================================== START SCRIPT =============================================
+# Fungsi untuk memvalidasi domain
+validate_domain() {
+    local domain=$1
+    if [[ $domain =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+#SETUP DOMAIN
+clear
+echo -e "${BB}————————————————————————————————————————————————————————"
+echo -e "${YB}                      SETUP DOMAIN"
+echo -e "${BB}————————————————————————————————————————————————————————"
+    while true; do
+        read -rp $'\e[33;1mInput domain kamu: \e[0m' -e dns
+
+        if [ -z "$dns" ]; then
+            echo -e "${RB}Tidak ada input untuk domain!${NC}"
+        elif ! validate_domain "$dns"; then
+            echo -e "${RB}Format tidak valid!${NC}"
+        else
+            echo "$dns" > /usr/local/etc/xray/dns/domain
+            echo "DNS=$dns" > /var/lib/dnsvps.conf
+            echo -e "Domain ${GB}${dns}${NC} berhasil disimpan"
+            break
+        fi
+    done
+
 # Update package list
 print_msg $YB "PERBAHARUI PAKET. . ."
 apt update -y
@@ -221,16 +251,6 @@ mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
 touch /usr/local/etc/xray/dns/domain
 
 #================================== BAGIAN PENGATURAN DOMAIN ===========================
-# Fungsi untuk memvalidasi domain
-validate_domain() {
-    local domain=$1
-    if [[ $domain =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 install_acme_sh2() {
     domain=$(cat /usr/local/etc/xray/dns/domain)
     rm -rf ~/.acme.sh/*_ecc >> /dev/null 2>&1
@@ -241,26 +261,6 @@ install_acme_sh2() {
     chmod 745 /usr/local/etc/xray/private.key
     echo -e "${YB}Sertifikat SSL berhasil dipasang!${NC}"
 }
-
-#SETUP DOMAIN
-clear
-echo -e "${BB}————————————————————————————————————————————————————————"
-echo -e "${YB}                      SETUP DOMAIN"
-echo -e "${BB}————————————————————————————————————————————————————————"
-    while true; do
-        read -rp $'\e[33;1mInput domain kamu: \e[0m' -e dns
-
-        if [ -z "$dns" ]; then
-            echo -e "${RB}Tidak ada input untuk domain!${NC}"
-        elif ! validate_domain "$dns"; then
-            echo -e "${RB}Format tidak valid!${NC}"
-        else
-            echo "$dns" > /usr/local/etc/xray/dns/domain
-            echo "DNS=$dns" > /var/lib/dnsvps.conf
-            echo -e "Domain ${GB}${dns}${NC} berhasil disimpan"
-            break
-        fi
-    done
 
 install_acme_sh2
 
