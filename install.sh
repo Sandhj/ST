@@ -23,12 +23,8 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
+HOSTING="LINK_GITHUB_KALIAN"
 #======================================== START SCRIPT =============================================
-#Membuat Direktori XRAY
-mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
-mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
-touch /usr/local/etc/xray/dns/domain
 # Fungsi untuk memvalidasi domain
 validate_domain() {
     local domain=$1
@@ -38,26 +34,6 @@ validate_domain() {
         return 1
     fi
 }
-
-#SETUP DOMAIN
-clear
-echo -e "${BB}————————————————————————————————————————————————————————"
-echo -e "${YB}                      SETUP DOMAIN"
-echo -e "${BB}————————————————————————————————————————————————————————"
-    while true; do
-        read -rp $'\e[33;1mInput domain kamu: \e[0m' -e dns
-
-        if [ -z "$dns" ]; then
-            echo -e "${RB}Tidak ada input untuk domain!${NC}"
-        elif ! validate_domain "$dns"; then
-            echo -e "${RB}Format tidak valid!${NC}"
-        else
-            echo "$dns" > /usr/local/etc/xray/dns/domain
-            echo "DNS=$dns" > /var/lib/dnsvps.conf
-            echo -e "Domain ${GB}${dns}${NC} berhasil disimpan"
-            break
-        fi
-    done
 
 # Update package list
 print_msg $YB "PERBAHARUI PAKET. . ."
@@ -206,7 +182,6 @@ sudo systemctl enable wireproxy
 sudo systemctl start wireproxy
 sudo systemctl daemon-reload
 sudo systemctl restart wireproxy
-clear
 
 # Fungsi untuk mendeteksi OS dan distribusi
 detect_os() {
@@ -215,7 +190,7 @@ detect_os() {
         OS=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
         VERSION=$(echo "$VERSION_ID" | tr -d '"')
     else
-        print_error "Tidak dapat mendeteksi OS. Skrip ini hanya mendukung distribusi berbasis Debian dan Ubuntu."
+        print_msg $RB "Tidak dapat mendeteksi OS. Skrip ini hanya mendukung distribusi berbasis Debian dan Ubuntu."
         exit 1
     fi
 }
@@ -236,7 +211,7 @@ add_nginx_repo() {
         curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
         print_msg "Repositori Nginx berhasil ditambahkan." "\033[0;32m"
     else
-        print_error "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
+        print_msg $RB "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
         exit 1
     fi
 }
@@ -246,7 +221,7 @@ main() {
     detect_os
     print_msg "Sistem operasi terdeteksi: $OS $VERSION" "\033[0;34m"
     add_nginx_repo
-    print_msg "Proses selesai"
+    print_msg "Proses selesai. Silakan lanjutkan dengan instalasi Nginx." "\033[0;32m"
 }
 main
 
@@ -267,7 +242,9 @@ sudo systemctl restart nginx
 systemctl restart nginx
 systemctl stop nginx
 systemctl stop xray
-
+mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
+mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
+touch /usr/local/etc/xray/dns/domain
 
 #================================== BAGIAN PENGATURAN DOMAIN ===========================
 install_acme_sh2() {
@@ -280,6 +257,26 @@ install_acme_sh2() {
     chmod 745 /usr/local/etc/xray/private.key
     echo -e "${YB}Sertifikat SSL berhasil dipasang!${NC}"
 }
+
+#SETUP DOMAIN
+clear
+echo -e "${BB}————————————————————————————————————————————————————————"
+echo -e "${YB}                      SETUP DOMAIN"
+echo -e "${BB}————————————————————————————————————————————————————————"
+    while true; do
+        read -rp $'\e[33;1mInput domain kamu: \e[0m' -e dns
+
+        if [ -z "$dns" ]; then
+            echo -e "${RB}Tidak ada input untuk domain!${NC}"
+        elif ! validate_domain "$dns"; then
+            echo -e "${RB}Format tidak valid!${NC}"
+        else
+            echo "$dns" > /usr/local/etc/xray/dns/domain
+            echo "DNS=$dns" > /var/lib/dnsvps.conf
+            echo -e "Domain ${GB}${dns}${NC} berhasil disimpan"
+            break
+        fi
+    done
 
 install_acme_sh2
 
@@ -306,13 +303,13 @@ wget -q -O /usr/local/etc/xray/config/04_inbounds.json "${HOSTING}/config/04_inb
 wget -q -O /usr/local/etc/xray/config/05_outbonds.json "${HOSTING}/config/05_outbonds.json"
 wget -q -O /usr/local/etc/xray/config/06_routing.json "${HOSTING}/config/06_routing.json"
 wget -q -O /usr/local/etc/xray/config/07_stats.json "${HOSTING}/config/07_stats.json"
-sleep 1.5
+
 
 # Membuat file log Xray yang diperlukan
 sudo touch /var/log/xray/access.log /var/log/xray/error.log
 sudo chown nobody:nogroup /var/log/xray/access.log /var/log/xray/error.log
 sudo chmod 664 /var/log/xray/access.log /var/log/xray/error.log
-sleep 1.5
+
 
 # Konfigurasi Nginx
 wget -q -O /var/www/html/index.html ${HOSTING}/index.html
@@ -323,11 +320,10 @@ sed -i "s/server_name web.com;/server_name $domain;/g" /etc/nginx/nginx.conf
 sed -i "s/server_name \*.web.com;/server_name \*.$domain;/" /etc/nginx/nginx.conf
 
 print_msg $GB "SETUP SCRIPT UTAMA SELESAI. . ."
-sleep 3
 
 systemctl restart nginx
 systemctl restart xray
-clear
+sleep 3
 
 # Blokir lalu lintas torrent (BitTorrent)
 sudo iptables -A INPUT -p udp --dport 6881:6889 -j DROP
@@ -336,42 +332,42 @@ sudo iptables -A INPUT -p tcp --dport 6881:6889 -j DROP
 sudo iptables -A INPUT -p tcp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
 sudo iptables -A INPUT -p udp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
 
-
+print_msg $YB "MEMASANG MENU. . ."
 cd
 mkdir -p /root/san
 cd /root/san
-wget -q ${HOSTING}/menu/menu.sh
-wget -q ${HOSTING}/menu/settingmenu.sh
-wget -q ${HOSTING}/menu/sodosokmenu.sh
-wget -q ${HOSTING}/menu/trojanmenu.sh
-wget -q ${HOSTING}/menu/vlessmenu.sh
-wget -q ${HOSTING}/menu/vmessmenu.sh
+wget -q ${HOSTING}/menu/menu
+wget -q ${HOSTING}/menu/settingmenu
+wget -q ${HOSTING}/menu/sodosokmenu
+wget -q ${HOSTING}/menu/trojanmenu
+wget -q ${HOSTING}/menu/vlessmenu
+wget -q ${HOSTING}/menu/vmessmenu
 
-wget -q ${HOSTING}/other/about.sh
-wget -q ${HOSTING}/other/cek-xray.sh
-wget -q ${HOSTING}/other/certxray.sh
-wget -q ${HOSTING}/other/clear-log.sh
-wget -q ${HOSTING}/other/dns.sh
-wget -q ${HOSTING}/other/log-xray.sh
-wget -q ${HOSTING}/other/route-xray.sh
-wget -q ${HOSTING}/other/update-xray.sh
-wget -q ${HOSTING}/other/xp.sh
+wget -q ${HOSTING}/other/about
+wget -q ${HOSTING}/other/cek-xray
+wget -q ${HOSTING}/other/certxray
+wget -q ${HOSTING}/other/clear-log
+wget -q ${HOSTING}/other/dns
+wget -q ${HOSTING}/other/log-xray
+wget -q ${HOSTING}/other/route-xray
+wget -q ${HOSTING}/other/update-xray
+wget -q ${HOSTING}/other/xp
 
-wget -q ${HOSTING}/xray/ss/create_ss.sh
-wget -q ${HOSTING}/xray/ss/delete_ss.sh
-wget -q ${HOSTING}/xray/ss/renew_ss.sh
+wget -q ${HOSTING}/xray/ss/create_ss
+wget -q ${HOSTING}/xray/ss/delete_ss
+wget -q ${HOSTING}/xray/ss/renew_ss
 
-wget -q ${HOSTING}/xray/trojan/create_trojan.sh
-wget -q ${HOSTING}/xray/trojan/delete_trojan.sh
-wget -q ${HOSTING}/xray/trojan/renew_trojan.sh
+wget -q ${HOSTING}/xray/trojan/create_trojan
+wget -q ${HOSTING}/xray/trojan/delete_trojan
+wget -q ${HOSTING}/xray/trojan/renew_trojan
 
-wget -q ${HOSTING}/xray/vless/create_vless.sh
-wget -q ${HOSTING}/xray/vless/delete_vless.sh
-wget -q ${HOSTING}/xray/vless/renew_vless.sh
+wget -q ${HOSTING}/xray/vless/create_vless
+wget -q ${HOSTING}/xray/vless/delete_vless
+wget -q ${HOSTING}/xray/vless/renew_vless
 
-wget -q ${HOSTING}/xray/vmess/create_vmess.sh
-wget -q ${HOSTING}/xray/vmess/delete_vmess.sh
-wget -q ${HOSTING}/xray/vmess/renew_vmess.sh
+wget -q ${HOSTING}/xray/vmess/create_vmess
+wget -q ${HOSTING}/xray/vmess/delete_vmess
+wget -q ${HOSTING}/xray/vmess/renew_vmess
 
 wget -q ${HOSTING}/traffic.py
 
@@ -379,7 +375,6 @@ wget -q ${HOSTING}/traffic.py
 cd
 chmod +x /root/san/*
 mv /root/san/* /usr/bin/
-rm -r /root/san
 
 cd
 echo "0 0 * * * root xp" >> /etc/crontab
