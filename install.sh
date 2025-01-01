@@ -25,6 +25,10 @@ fi
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 #======================================== START SCRIPT =============================================
+#Membuat Direktori XRAY
+mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
+mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
+touch /usr/local/etc/xray/dns/domain
 # Fungsi untuk memvalidasi domain
 validate_domain() {
     local domain=$1
@@ -246,9 +250,7 @@ sudo systemctl restart nginx
 systemctl restart nginx
 systemctl stop nginx
 systemctl stop xray
-mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
-mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
-touch /usr/local/etc/xray/dns/domain
+
 
 #================================== BAGIAN PENGATURAN DOMAIN ===========================
 install_acme_sh2() {
