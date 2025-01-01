@@ -1,0 +1,9 @@
+{
+  "dns": {
+    "queryStrategy": "UseIP",
+    "servers": [
+      "https://1.1.1.1/dns-query"
+    ],
+    "tag": "dns_inbound"
+  }
+}

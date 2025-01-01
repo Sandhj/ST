@@ -1,0 +1,48 @@
+{
+    "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "inboundTag": [
+          "api"
+        ],
+        "outboundTag": "api",
+        "type": "field"
+      },
+      {
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "blocked",
+        "type": "field"
+      },
+      {
+        "outboundTag": "blocked",
+        "protocol": [
+          "bittorrent"
+        ],
+        "type": "field"
+      },
+      {
+        "domain": [
+          "geosite:google",
+          "geosite:openai",
+          "geosite:netflix",
+          "geosite:reddit",
+          "geosite:apple",
+          "geosite:spotify",
+          "geosite:meta",
+          "geosite:microsoft",
+          "geosite:zoom"
+        ],
+        "outboundTag": "direct",
+        "type": "field"
+      },
+      {
+        "outboundTag": "direct",
+        "port": "0-65535",
+        "type": "field"
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    },
+    {
+      "protocol": "socks",
+      "settings": {
+        "servers": [
+          {
+            "address": "127.0.0.1",
+            "port": 40000,
+            "users": []
+          }
+        ]
+      },
+      "tag": "socks"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv6v4"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "socks",
+          "tcpFastOpen": true,
+          "tcpKeepAliveInterval": 5,
+          "tcpMptcp": false,
+          "tcpNoDelay": true
+        }
+      },
+      "tag": "warp"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# Definisi Warna
+NC='\e[0m'
+DEFBOLD='\e[39;1m'
+RB='\e[31;1m'
+GB='\e[32;1m'
+YB='\e[33;1m'
+BB='\e[34;1m'
+MB='\e[35;1m'
+CB='\e[36;1m'
+WB='\e[37;1m'
+
+# Fungsi untuk menghasilkan UUID
+generate_uuid() {
+    cat /proc/sys/kernel/random/uuid
+}
+
+# Fungsi untuk menambahkan konfigurasi ke file Xray
+add_xray_config() {
+    local section=$1
+    local content=$2
+    sed -i "/#$section\$/a\\### $user $exp\n$content" /usr/local/etc/xray/config/04_inbounds.json
+}
+
+# Inisialisasi Variabel
+domain=$(cat /usr/local/etc/xray/dns/domain)
+uuid=$(generate_uuid)
+
+echo -e "${BB}———————————————————————————————————————${NC}"
+echo -e "${BB}            Create New User ${NC}           "
+echo -e "${BB}———————————————————————————————————————${NC}"
+read -p "Username :" user
+while true; do
+    read -p "Expired :" masaaktif
+    if [[ $masaaktif =~ ^0-9+$ ]]; then
+        break
+    else
+        echo "Masukkan Angka Yang Valid"
+    fi
+done    
+
+exp=$(date -d "$masaaktif days" +"%Y-%m-%d") 
+ISP=$(cat /usr/local/etc/xray/org)
+CITY=$(cat /usr/local/etc/xray/city)
+REG=$(cat /usr/local/etc/xray/region)
+
+# Menambahkan Konfigurasi ke File Xray
+add_xray_config "vmess" "},{\"id\": \"$uuid\",\"email\": \"$user\""
+
+# Fungsi untuk membuat tautan Vmess
+create_vmess_link() {
+    local version="2"
+    local ps=$1
+    local port=$2
+    local net=$3
+    local path=$4
+    local tls=$5
+    cat <<EOF | base64 -w 0
+{
+"v": "$version",
+"ps": "$ps",
+"add": "$domain",
+"port": "$port",
+"id": "$uuid",
+"aid": "0",
+"net": "$net",
+"path": "$path",
+"type": "none",
+"host": "$domain",
+"tls": "$tls"
+}
+EOF
+}
+
+# Membuat Tautan Vmess
+vmesslink1="vmess://$(create_vmess_link "vmess-ws-tls" "443" "ws" "/vmess-ws" "tls")"
+vmesslink2="vmess://$(create_vmess_link "vmess-ws-ntls" "80" "ws" "/vmess-ws" "none")"
+vmesslink3="vmess://$(create_vmess_link "vmess-hup-tls" "443" "httpupgrade" "/vmess-hup" "tls")"
+vmesslink4="vmess://$(create_vmess_link "vmess-hup-ntls" "80" "httpupgrade" "/vmess-hup" "none")"
+vmesslink5="vmess://$(create_vmess_link "vmess-grpc" "443" "grpc" "vmess-grpc" "tls")"
+
+# Restart Xray Service
+systemctl restart xray
+clear
+# Menampilkan Informasi ke Pengguna
+
+TEXT="
+—————————————————————————————————
+           Vmess Account
+—————————————————————————————————
+ISP         : $ISP
+REGION      : $REG
+CITY        : $CITY
+PORT TLS    : 443
+PORT HTTP   : 80
+EXPIRED ON  : $exp
+—————————————————————————————————
+WS TLS      : $vmesslink1
+WS nTLS     : $vmesslink2
+HUP TLS     : $vmesslink3
+HUP nTLS    : $vmesslink4
+GRPC        : $vmesslink5
+"
+
+echo "$TEXT"
+read -n 1 -s -r -p "Press any key to go back to menu"
+clear
+menu
