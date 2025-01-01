@@ -208,31 +208,47 @@ sudo systemctl daemon-reload
 sudo systemctl restart wireproxy
 clear
 
-# Deteksi OS dan versi
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    OS=$(echo "$NAME" | awk '{print $1}')  # Ambil kata pertama dari NAME
-    VERSION=$VERSION_ID
-    echo "Sistem Operasi: $OS"
-    echo "Versi: $VERSION"
-else
-    echo "Tidak dapat mendeteksi OS. File /etc/os-release tidak ditemukan."
-    exit 1
-fi
+# Fungsi untuk mendeteksi OS dan distribusi
+detect_os() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
+        VERSION=$(echo "$VERSION_ID" | tr -d '"')
+    else
+        print_error "Tidak dapat mendeteksi OS. Skrip ini hanya mendukung distribusi berbasis Debian dan Ubuntu."
+        exit 1
+    fi
+}
 
 # Fungsi untuk menambahkan repositori Nginx
-  if [ "$OS" == "Ubuntu" ]; then
-    sudo apt install curl gnupg2 ca-certificates lsb-release ubuntu-keyring -y
-    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-  elif [ "$OS" == "Debian" ]; then
-    sudo apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring -y
-    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/debian `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-  else
-    print_msg $RB "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
-    exit 1
-  fi
+add_nginx_repo() {
+    if [[ "$OS" == "ubuntu" || "$OS" == "debian" ]]; then
+        sudo apt update
+        sudo apt install curl gnupg2 ca-certificates lsb-release -y
+        if [ "$OS" == "ubuntu" ]; then
+            sudo apt install ubuntu-keyring -y
+        elif [ "$OS" == "debian" ]; then
+            sudo apt install debian-archive-keyring -y
+        fi
+
+        # Tambahkan repositori Nginx
+        echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/$OS $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+        curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+        print_msg "Repositori Nginx berhasil ditambahkan." "\033[0;32m"
+    else
+        print_error "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
+        exit 1
+    fi
+}
+
+# Fungsi utama
+main() {
+    detect_os
+    print_msg "Sistem operasi terdeteksi: $OS $VERSION" "\033[0;34m"
+    add_nginx_repo
+    print_msg "Proses selesai"
+}
+main
 
 # Fungsi untuk menginstal Nginx
   sudo apt update
