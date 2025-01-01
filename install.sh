@@ -208,12 +208,10 @@ sudo systemctl daemon-reload
 sudo systemctl restart wireproxy
 clear
 
-#!/bin/bash
-
 # Deteksi OS dan versi
 if [ -f /etc/os-release ]; then
     . /etc/os-release
-    OS=$(echo "$NAME" | tr '[:upper:]' '[:lower:]')
+    OS=$(echo "$NAME" | awk '{print $1}')  # Ambil kata pertama dari NAME
     VERSION=$VERSION_ID
     echo "Sistem Operasi: $OS"
     echo "Versi: $VERSION"
