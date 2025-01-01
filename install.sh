@@ -208,10 +208,12 @@ sudo systemctl daemon-reload
 sudo systemctl restart wireproxy
 clear
 
+#!/bin/bash
+
+# Deteksi OS dan versi
 if [ -f /etc/os-release ]; then
-    # Baca informasi dari /etc/os-release
     . /etc/os-release
-    OS=$NAME
+    OS=$(echo "$NAME" | tr '[:upper:]' '[:lower:]')
     VERSION=$VERSION_ID
     echo "Sistem Operasi: $OS"
     echo "Versi: $VERSION"
@@ -221,11 +223,11 @@ else
 fi
 
 # Fungsi untuk menambahkan repositori Nginx
-  if [ "$OS" == "Ubuntu" ]; then
+  if [ "$OS" == "ubuntu" ]; then
     sudo apt install curl gnupg2 ca-certificates lsb-release ubuntu-keyring -y
     echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-  elif [ "$OS" == "Debian" ]; then
+  elif [ "$OS" == "debian" ]; then
     sudo apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring -y
     echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/debian `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
