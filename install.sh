@@ -101,6 +101,7 @@ setup_domain() {
                 input_domain
                 install_acme_sh2
 }
+
 setup_domain
 
 
