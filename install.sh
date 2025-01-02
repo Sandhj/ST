@@ -1,6 +1,5 @@
 #!/bin/bash
 
-rm -rf install.sh
 clear
 # Warna untuk output (sesuaikan dengan kebutuhan)
 NC='\e[0m'       # No Color (mengatur ulang warna teks ke default)
@@ -70,43 +69,25 @@ input_domain() {
         else
             echo "$dns" > /usr/local/etc/xray/dns/domain
             echo "DNS=$dns" > /var/lib/dnsvps.conf
-            echo -e "Domain ${GB}${dns}${NC} berhasil disimpan"
             break
         fi
     done
 }
 
 
-install_acme_sh2() {
-    domain=$(cat /usr/local/etc/xray/dns/domain)
-    rm -rf ~/.acme.sh/*_ecc >> /dev/null 2>&1
-    curl https://get.acme.sh | sh
-    source ~/.bashrc
-    ~/.acme.sh/acme.sh --register-account -m $(echo $RANDOM | md5sum | head -c 6; echo;)@gmail.com --server letsencrypt
-    ~/.acme.sh/acme.sh --issue -d $domain --standalone --listen-v6 --server letsencrypt --keylength ec-256 --fullchain-file /usr/local/etc/xray/fullchain.cer --key-file /usr/local/etc/xray/private.key --reloadcmd "systemctl restart nginx" --force
-    chmod 745 /usr/local/etc/xray/private.key
-    echo -e "${YB}Sertifikat SSL berhasil dipasang!${NC}"
-}
 
-# Fungsi untuk menampilkan menu utama
-setup_domain() {
-    while true; do
-        clear
+#Fungsi Input Domain
+echo -e "${BB}————————————————————————————————————————————————————————"
+echo -e "${YB}                      SETUP DOMAIN"
+echo -e "${BB}————————————————————————————————————————————————————————"
 
-        # Menampilkan judul
-        echo -e "${BB}————————————————————————————————————————————————————————"
-        echo -e "${YB}                      SETUP DOMAIN"
-        echo -e "${BB}————————————————————————————————————————————————————————"
-
-                input_domain
-                install_acme_sh2
-}
-
-setup_domain
+input_domain
 
 
 # Update package list
+print_msg $YB "Setup Domain Done"
 print_msg $YB "Install Paket Yang Dibutuhkan"
+sleep 2
 apt update -y
 apt install socat netfilter-persistent bsdmainutils -y
 apt install vnstat lsof fail2ban -y
@@ -372,6 +353,20 @@ clear
 systemctl restart nginx
 systemctl stop nginx
 systemctl stop xray
+
+#Cert Domain
+install_acme_sh2() {
+    domain=$(cat /usr/local/etc/xray/dns/domain)
+    rm -rf ~/.acme.sh/*_ecc >> /dev/null 2>&1
+    curl https://get.acme.sh | sh
+    source ~/.bashrc
+    ~/.acme.sh/acme.sh --register-account -m $(echo $RANDOM | md5sum | head -c 6; echo;)@gmail.com --server letsencrypt
+    ~/.acme.sh/acme.sh --issue -d $domain --standalone --listen-v6 --server letsencrypt --keylength ec-256 --fullchain-file /usr/local/etc/xray/fullchain.cer --key-file /usr/local/etc/xray/private.key --reloadcmd "systemctl restart nginx" --force
+    chmod 745 /usr/local/etc/xray/private.key
+    echo -e "${YB}Sertifikat SSL berhasil dipasang!${NC}"
+}
+
+install_acme_sh2
 
 
 echo -e "${GB}[ INFO ]${NC} ${YB}Setup Nginx & Xray Config${NC}"
