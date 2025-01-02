@@ -279,7 +279,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$(cat /usr/local/etc/xray/serverpsk)",
+        "password": "$serverpsk",
         "clients": [
           {
             "password": "$userpsk"
@@ -435,7 +435,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$(cat /usr/local/etc/xray/serverpsk)",
+        "password": "$serverpsk",
         "clients": [
           {
             "password": "$userpsk"
@@ -615,7 +615,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$(cat /usr/local/etc/xray/serverpsk)",
+        "password": "$serverpsk",
         "clients": [
           {
             "password": "$userpsk"
@@ -790,7 +790,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$(cat /usr/local/etc/xray/serverpsk)",
+        "password": "$serverpsk",
         "clients": [
           {
             "password": "$userpsk"
@@ -884,7 +884,7 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$(cat /usr/local/etc/xray/serverpsk)",
+        "password": "$serverpsk",
         "clients": [
           {
             "password": "$userpsk"
