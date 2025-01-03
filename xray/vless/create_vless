@@ -64,21 +64,27 @@ clear
 
 TEXT="
 —————————————————————————————————
-           Vless Account
+           Vmess Account
 —————————————————————————————————
+USERNAME    : $user
+EXPIRED ON  : $exp
 ISP         : $ISP
 REGION      : $REG
-CITY        : $CITY
 PORT TLS    : 443
 PORT HTTP   : 80
-EXPIRED ON  : $exp
 —————————————————————————————————
 WS TLS      : $vlesslink1
+—————————————————————————————————
 WS nTLS     : $vlesslink2
+—————————————————————————————————
 HUP TLS     : $vlesslink3
+—————————————————————————————————
 HUP nTLS    : $vlesslink4
+—————————————————————————————————
 GRPC        : $vlesslink5
-XTLS-VISION : $vlesslink6
+—————————————————————————————————
+XTLS        : $vlesslink6
+—————————————————————————————————
 "
 
 echo "$TEXT"
