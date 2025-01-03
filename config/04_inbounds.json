@@ -18,7 +18,7 @@
         "clients": [
           {
             "flow": "xtls-rprx-vision",
-            "id": "$uuid"
+            "id": "UUID"
 #xtls
           }
         ],
@@ -123,7 +123,7 @@
       "settings": {
         "clients": [
           {
-            "password": "$pwtr"
+            "password": "PWTR"
 #trojan
           }
         ],
@@ -158,7 +158,7 @@
         "clients": [
           {
             "email":"general@vless-ws",
-            "id": "$uuid"
+            "id": "UUID"
 #vless
           }
         ],
@@ -189,7 +189,7 @@
         "clients": [
           {
             "email": "general@vmess-ws", 
-            "id": "$uuid"
+            "id": "UUID"
 #vmess
           }
         ]
@@ -218,7 +218,7 @@
       "settings": {
         "clients": [
           {
-            "password": "$pwtr"
+            "password": "PWTR"
 #trojan
           }
         ]
@@ -249,7 +249,7 @@
         "clients": [
             {
               "method": "aes-256-gcm",
-              "password": "$pwss"
+              "password": "PWSS"
 #ss
             }
           ],
@@ -279,10 +279,10 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$serverpsk",
+        "password": "SERVERPSK",
         "clients": [
           {
-            "password": "$userpsk"
+            "password": "USERPSK"
 #ss22
           }
         ],
@@ -313,7 +313,7 @@
         "clients": [
           {
             "email":"general@vless-ws",
-            "id": "$uuid"
+            "id": "UUID"
 #vless
           }
         ],
@@ -344,7 +344,7 @@
         "clients": [
           {
             "email":"general@vless-ws",
-            "id": "$uuid"
+            "id": "UUID"
 #vmess
           }
         ],
@@ -374,7 +374,7 @@
       "settings": {
         "clients": [
           {
-            "password": "$pwtr"
+            "password": "PWTR"
 #trojan
           }
         ]
@@ -405,7 +405,7 @@
         "clients": [
             {
               "method": "aes-256-gcm",
-              "password": "$pwss"
+              "password": "PWSS"
 #ss
             }
           ],
@@ -435,10 +435,10 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$serverpsk",
+        "password": "SERVERPSK",
         "clients": [
           {
-            "password": "$userpsk"
+            "password": "USERPSK"
 #ss22
           }
         ],
@@ -470,7 +470,7 @@
         "clients": [
           {
             "email": "grpc",
-            "id": "$uuid"
+            "id": "UUID"
 #vless
           }
         ],
@@ -507,7 +507,7 @@
         "clients": [
           {
             "email": "grpc",
-            "id": "$uuid"
+            "id": "UUID"
 #vmess
           }
         ],
@@ -544,7 +544,7 @@
         "clients": [
           {
             "email": "grpc",
-            "password": "$pwtr"
+            "password": "PWTR"
 #trojan
           }
         ],
@@ -581,7 +581,7 @@
         "clients": [
             {
               "method": "aes-256-gcm",
-              "password": "$pwss"
+              "password": "PWSS"
 #ss
             }
           ],
@@ -615,10 +615,10 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$serverpsk",
+        "password": "SERVERPSK",
         "clients": [
           {
-            "password": "$userpsk"
+            "password": "USERPSK"
 #ss22
           }
         ],
@@ -651,7 +651,7 @@
       "settings": {
         "clients": [
           {
-            "id": "$uuid"
+            "id": "UUID"
 #universal
           }
         ],
@@ -729,7 +729,7 @@
       "settings": {
         "clients": [
           {
-            "password": "$pwtr"
+            "password": "PWTR"
 #trojan
           }
         ]
@@ -760,7 +760,7 @@
         "clients": [
             {
               "method": "aes-256-gcm",
-              "password": "$pwss"
+              "password": "PWSS"
 #ss
             }
           ],
@@ -790,10 +790,10 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$serverpsk",
+        "password": "SERVERPSK",
         "clients": [
           {
-            "password": "$userpsk"
+            "password": "USERPSK"
 #ss22
           }
         ],
@@ -823,7 +823,7 @@
       "settings": {
         "clients": [
           {
-            "password": "$pwtr"
+            "password": "PWTR"
 #trojan
           }
         ]
@@ -854,7 +854,7 @@
         "clients": [
             {
               "method": "aes-256-gcm",
-              "password": "$pwss"
+              "password": "PWSS"
 #ss
             }
           ],
@@ -884,10 +884,10 @@
       "protocol": "shadowsocks",
       "settings": {
         "method": "2022-blake3-aes-256-gcm",
-        "password": "$serverpsk",
+        "password": "SERVERPSK",
         "clients": [
           {
-            "password": "$userpsk"
+            "password": "USERPSK"
 #ss22
           }
         ],
