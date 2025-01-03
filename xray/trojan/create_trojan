@@ -62,7 +62,7 @@ clear
 
 TEXT="
 —————————————————————————————————
-           Vmess Account
+           Trojan Account
 —————————————————————————————————
 USERNAME    : $user
 EXPIRED ON  : $exp
@@ -71,17 +71,17 @@ REGION      : $REG
 PORT TLS    : 443
 PORT HTTP   : 80
 —————————————————————————————————
-WS TLS      : $vmesslink1
+WS TLS      : $trojanlink1
 —————————————————————————————————
-WS nTLS     : $vmesslink2
+WS nTLS     : $trojanlink2
 —————————————————————————————————
-HUP TLS     : $vmesslink3
+HUP TLS     : $trojanlink3
 —————————————————————————————————
-HUP nTLS    : $vmesslink4
+HUP nTLS    : $trojanlink4
 —————————————————————————————————
-GRPC        : $vmesslink5
+GRPC        : $trojanlink5
 —————————————————————————————————
-TCP         : $vmesslink6
+TCP         : $trojanlink6
 —————————————————————————————————
 "
 
