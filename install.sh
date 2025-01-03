@@ -368,18 +368,20 @@ install_acme_sh2() {
 
 install_acme_sh2
 
-
 echo -e "${GB}[ INFO ]${NC} ${YB}Setup Nginx & Xray Config${NC}"
-# Menghasilkan UUID
+# Generate variabel
 uuid=$(cat /proc/sys/kernel/random/uuid)
-
-# Menghasilkan password random
 pwtr=$(openssl rand -hex 4)
 pwss=$(echo $RANDOM | md5sum | head -c 6; echo;)
-
-# Menghasilkan PSK (Pre-Shared Key) untuk pengguna dan server
 userpsk=$(openssl rand -base64 32)
 serverpsk=$(openssl rand -base64 32)
+
+# Escape karakter khusus dalam variabel
+escaped_uuid=$(printf '%s\n' "$uuid" | sed 's/[\/&]/\\&/g')
+escaped_pwtr=$(printf '%s\n' "$pwtr" | sed 's/[\/&]/\\&/g')
+escaped_pwss=$(printf '%s\n' "$pwss" | sed 's/[\/&]/\\&/g')
+escaped_userpsk=$(printf '%s\n' "$userpsk" | sed 's/[\/&]/\\&/g')
+escaped_serverpsk=$(printf '%s\n' "$serverpsk" | sed 's/[\/&]/\\&/g')
 
 # Konfigurasi Xray-core
 print_msg $YB "Mengonfigurasi Xray-core..."
@@ -392,6 +394,14 @@ wget -q -O /usr/local/etc/xray/config/05_outbonds.json "${HOSTING}/config/05_out
 wget -q -O /usr/local/etc/xray/config/06_routing.json "${HOSTING}/config/06_routing.json"
 wget -q -O /usr/local/etc/xray/config/07_stats.json "${HOSTING}/config/07_stats.json"
 
+# Ganti placeholder di dalam 04_inbounds JSON 
+sed -i \
+    -e "s/UUID/$escaped_uuid/g" \
+    -e "s/PWTR/$escaped_pwtr/g" \
+    -e "s/PWSS/$escaped_pwss/g" \
+    -e "s/USERPSK/$escaped_userpsk/g" \
+    -e "s/SERVERPSK/$escaped_serverpsk/g" \
+    /usr/local/etc/xray/config/04_inbounds.json
 sleep 1.5
 
 # Membuat file log Xray yang diperlukan
