@@ -83,25 +83,29 @@ vmesslink5="vmess://$(create_vmess_link "vmess-grpc" "443" "grpc" "vmess-grpc" "
 
 # Restart Xray Service
 systemctl restart xray
-clear
-# Menampilkan Informasi ke Pengguna
 
+clear
 TEXT="
 —————————————————————————————————
            Vmess Account
 —————————————————————————————————
+USERNAME    : $user
+EXPIRED ON  : $exp
 ISP         : $ISP
 REGION      : $REG
-CITY        : $CITY
 PORT TLS    : 443
 PORT HTTP   : 80
-EXPIRED ON  : $exp
 —————————————————————————————————
 WS TLS      : $vmesslink1
+—————————————————————————————————
 WS nTLS     : $vmesslink2
+—————————————————————————————————
 HUP TLS     : $vmesslink3
+—————————————————————————————————
 HUP nTLS    : $vmesslink4
+—————————————————————————————————
 GRPC        : $vmesslink5
+—————————————————————————————————
 "
 
 echo "$TEXT"
