@@ -27,12 +27,12 @@ WB='\e[37;1m'    # White Bold
     read -p " Select Menu :  " opt
     echo -e ""
     case $opt in
-        2) clear ; route-xray ;;
-        3) clear ; python /usr/bin/traffic.py ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
-        6) clear ; speedtest ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
-        7) clear ; dns ;;
-        8) clear ; certxray ;;
-        9) clear ; about ;;
+        1) clear ; route-xray ;;
+        2) clear ; python /usr/bin/traffic.py ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
+        3) clear ; speedtest ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
+        4) clear ; dns ;;
+        5) clear ; certxray ;;
+        6) clear ; about ;;
         0) clear ; menu ;;
         *) echo -e "${YB}Invalid input${NC}" ; sleep 1 ; settingmenu ;;
     esac
