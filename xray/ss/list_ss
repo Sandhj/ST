@@ -1,0 +1,37 @@
+#!/bin/bash
+
+CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
+
+echo "——————————————————————————————————"
+echo " User                Expired"
+echo "——————————————————————————————————"
+
+# Variabel untuk menyimpan daftar nama pengguna yang sudah diproses
+declare -A processed_users
+
+# Proses membaca file
+grep '##@' "$CONFIG_FILE" | while read -r line; do
+  # Ambil bagian nama pengguna (split kedua)
+  USER=$(echo "$line" | awk '{print $2}')
+  # Ambil tanggal kadaluarsa (split ketiga)
+  EXPIRY_DATE=$(echo "$line" | awk '{print $3}')
+  # Konversi tanggal hari ini dan tanggal kadaluarsa ke epoch
+  TODAY=$(date +%s)
+  EXPIRY_EPOCH=$(date -d "$EXPIRY_DATE" +%s)
+  # Hitung sisa hari
+  DAYS_LEFT=$(( (EXPIRY_EPOCH - TODAY) / 86400 ))
+
+  # Periksa apakah nama pengguna sudah diproses (case-sensitive)
+  if [[ -z "${processed_users[$USER]}" ]]; then
+    # Jika belum diproses, tambahkan ke daftar dan tampilkan
+    processed_users[$USER]=1
+    if (( DAYS_LEFT > 0 )); then
+      echo "$USER                ${DAYS_LEFT} Days"
+    else
+      echo "$USER                Expired"
+    fi
+  fi
+done
+
+# Footer list
+echo "——————————————————————————————————"
