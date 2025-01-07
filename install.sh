@@ -454,7 +454,7 @@ wget -q ${HOSTING}/other/dns
 wget -q ${HOSTING}/other/log-xray
 wget -q ${HOSTING}/other/route-xray
 wget -q ${HOSTING}/other/update-xray
-wget -q ${HOSTING}/other/xp
+wget -q ${HOSTING}/other/xp2
 
 wget -q ${HOSTING}/xray/ss/create_ss
 wget -q ${HOSTING}/xray/ss/delete_ss
@@ -480,7 +480,7 @@ chmod +x /root/san/*
 mv /root/san/* /usr/bin/
 
 cd
-echo "0 0 * * * root xp" >> /etc/crontab
+echo "0 0 * * * root xp2" >> /etc/crontab
 echo "*/3 * * * * root clear-log" >> /etc/crontab
 systemctl restart cron
 clear
