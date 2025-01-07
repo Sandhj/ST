@@ -1,9 +1,10 @@
 #!/bin/bash
 
-#AUTO REMOVE VMESS
+#GET INFORMASI
 CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 CURRENT_DATE=$(date +%Y-%m-%d)
 
+#AUTO REMOVE VMESS
 while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" == *"###"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
@@ -16,9 +17,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 done < "$CONFIG_FILE"
 
 #AUTO REMOVE VLESS
-CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
-CURRENT_DATE=$(date +%Y-%m-%d)
-
 while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" == *"##!"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
@@ -31,9 +29,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 done < "$CONFIG_FILE"
 
 #AUTO REMOVE TROJAN
-CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
-CURRENT_DATE=$(date +%Y-%m-%d)
-
 while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" == *"##?"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
@@ -46,9 +41,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 done < "$CONFIG_FILE"
 
 #AUTO REMOVE SS
-CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
-CURRENT_DATE=$(date +%Y-%m-%d)
-
 while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" == *"##@"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
