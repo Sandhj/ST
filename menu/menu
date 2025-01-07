@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 # Warna untuk output (sesuaikan dengan kebutuhan)
 NC='\e[0m'       # No Color (mengatur ulang warna teks ke default)
 DEFBOLD='\e[39;1m' # Default Bold
@@ -11,14 +12,27 @@ MB='\e[35;1m'    # Magenta Bold
 CB='\e[36;1m'    # Cyan Bold
 WB='\e[37;1m'    # White Bold
 
+
 LAYOUT="${YB}
-  ———————————————————————————
-         Menu Dashboard       
-  ———————————————————————————
-1. Vmess Menu   3. Trojan Menu
-2. Vless Menu   4. Sodosok Menu
-        5. Menu lain
-  ———————————————————————————
+————————————————————————————————
+          SAN TUNNELING
+————————————————————————————————
+ISP     : $ISP
+REGION  : $REGION
+IP      : $IP
+DOMAIN  : 
+————————————————————————————————
+      Vmess Account   : 2   
+      Vless Account   : 2   
+      Trojan Account  : 3
+      Sodosok Account : 0   
+————————————————————————————————      
+1. Vmess Menu    4. Trojan Menu
+2. Vless Menu    5. Sodosok Menu
+3. Vmess Menu    6. Trojan Menu
+————————————————————————————————
+     Autoscript Mod By San
+————————————————————————————————
 ${NC} 
 "
 echo -e "$LAYOUT"    
