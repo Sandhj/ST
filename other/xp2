@@ -20,7 +20,7 @@ CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 CURRENT_DATE=$(date +%Y-%m-%d)
 
 while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == *"###"* ]]; then
+    if [[ "$line" == *"##!"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
 
         EXPIRATION_DATE=${split[2]}
@@ -35,7 +35,7 @@ CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 CURRENT_DATE=$(date +%Y-%m-%d)
 
 while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == *"###"* ]]; then
+    if [[ "$line" == *"##?"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
 
         EXPIRATION_DATE=${split[2]}
@@ -50,7 +50,7 @@ CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 CURRENT_DATE=$(date +%Y-%m-%d)
 
 while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == *"###"* ]]; then
+    if [[ "$line" == *"##@"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
 
         EXPIRATION_DATE=${split[2]}
