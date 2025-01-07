@@ -20,7 +20,7 @@ WB='\e[37;1m'    # White Bold
     echo -e " ${MB}[2]${NC} ${YB}Renew Account${NC}"
     echo -e " ${MB}[3]${NC} ${YB}List Account${NC}"
     echo -e " ${MB}[4]${NC} ${YB}Delete Accoount${NC}"
-    echo -e " ${GB}[4]${NC} ${GB}Main Menu${NC}"
+    echo -e " ${GB}[0]${NC} ${GB}Main Menu${NC}"
     echo -e "${BB}———————————————————————————————————————${NC}"
     read -p " Select Menu :  " opt
     echo -e ""
