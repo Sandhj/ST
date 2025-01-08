@@ -7,7 +7,7 @@ HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
 loading_bar() {
     local pid=$1
-    local max_length=15  # Panjang bar loading
+    local max_length=25  # Panjang bar loading
     local delay=0.2
     local spinstr='|/-\\'
 
@@ -56,16 +56,19 @@ wget -q ${HOSTING}/xray/trojan/create_trojan
 wget -q ${HOSTING}/xray/trojan/delete_trojan
 wget -q ${HOSTING}/xray/trojan/renew_trojan
 wget -q ${HOSTING}/xray/trojan/list_trojan
+wget -q ${HOSTING}/xray/trojan/trojan_custom
 
 wget -q ${HOSTING}/xray/vless/create_vless
 wget -q ${HOSTING}/xray/vless/delete_vless
 wget -q ${HOSTING}/xray/vless/renew_vless
 wget -q ${HOSTING}/xray/vless/list_vless
+wget -q ${HOSTING}/xray/vless/vless_custom
 
 wget -q ${HOSTING}/xray/vmess/create_vmess
 wget -q ${HOSTING}/xray/vmess/delete_vmess
 wget -q ${HOSTING}/xray/vmess/renew_vmess
 wget -q ${HOSTING}/xray/vmess/list_vmess
+wget -q ${HOSTING}/xray/vmess/vmess_custom
 
 wget -q ${HOSTING}/traffic.py
 
