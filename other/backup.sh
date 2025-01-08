@@ -53,3 +53,10 @@ if __name__ == "__main__":
     if backup_file():
         send_to_telegram()
 EOF
+
+echo -e "Sedang di Proses. . ."
+sleep 2
+echo -e "Sukses✓. . . ( Enter Untuk Kembali ke menu)"
+read
+
+menu
