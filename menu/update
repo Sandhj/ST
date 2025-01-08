@@ -4,6 +4,7 @@ GB='\e[32;1m'
 NC='\e[0m'
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
+echo -e "${GB}Proses Update, Tunggu Beberapa Saat. . .${NC}" 
 
 loading_bar() {
     local pid=$1
@@ -80,7 +81,6 @@ mv /root/san/* /usr/bin/
 
 main_script &
 
-echo -e "${GB}Proses Update, Tunggu Beberapa Saat. . .${NC}" 
 loading_bar $!
 
 echo -e "${GB}Update Selesai✓${NC}"
