@@ -12,28 +12,36 @@ MB='\e[35;1m'    # Magenta Bold
 CB='\e[36;1m'    # Cyan Bold
 WB='\e[37;1m'    # White Bold
 
+# Fungsi untuk memeriksa status layanan
+check_service() {
+    local service_name=$1
+    if systemctl is-active --quiet "$service_name"; then
+        echo "${GB}Good${NC}"
+    else
+        echo "${RB}Eror${NC}"
+    fi
+}
 
-LAYOUT="${YB}
-————————————————————————————————
-          SAN TUNNELING
-————————————————————————————————
-ISP     : $ISP
-REGION  : $REGION
-IP      : $IP
-DOMAIN  : 
-————————————————————————————————
-      Vmess Account   : 2   
-      Vless Account   : 2   
-      Trojan Account  : 3
-      Sodosok Account : 0   
-————————————————————————————————      
-1. Vmess Menu    4. Trojan Menu
-2. Vless Menu    5. Sodosok Menu
-3. Vmess Menu    6. Trojan Menu
-————————————————————————————————
-     Autoscript Mod By San
-————————————————————————————————
-${NC} 
+clear
+LAYOUT="
+${BB}————————————————————————————————${NC}
+          ${CB}SAN TUNNELING${NC}
+${BB}————————————————————————————————${NC}
+Xray Service : $(check_service xray.service)
+Wireproxy    : $(check_service wireproxy.service)
+Nginx        : $(check_service nginx)
+${BB}————————————————————————————————${NC}
+      ${GB}Vmess Account   : ${YB}2${NC}
+      ${GB}Vless Account   : ${YB}2${NC}
+      ${GB}Trojan Account  : ${YB}3${NC}
+      ${GB}Sodosok Account : ${RB}0${NC}
+${BB}————————————————————————————————${NC}
+1. ${CB}Vmess Menu${NC}    4. ${CB}Trojan Menu${NC}
+2. ${CB}Vless Menu${NC}    5. ${CB}Sodosok Menu${NC}
+3. ${CB}Vmess Menu${NC}    6. ${CB}Trojan Menu${NC}
+${BB}————————————————————————————————${NC}
+     ${MB}Autoscript Mod By San${NC}
+${BB}————————————————————————————————${NC}
 "
 echo -e "$LAYOUT"    
 read -p " Select Menu :  " opt
