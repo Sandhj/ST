@@ -16,7 +16,7 @@ loading() {
     echo " Done!"
 }
 
-main script() {
+main_script() {
 cd
 mkdir -p /root/san
 cd /root/san
