@@ -44,9 +44,9 @@ ${BB}—————————————————————————
       ${GB}Trojan Account  : ${YB} $trojan${NC}
       ${GB}Sodosok Account : ${RB} $ss${NC}
 ${BB}————————————————————————————————${NC}
-1. ${CB}Vmess Menu${NC}    4. ${CB}Trojan Menu${NC}
-2. ${CB}Vless Menu${NC}    5. ${CB}Sodosok Menu${NC}
-3. ${CB}Vmess Menu${NC}    6. ${CB}Trojan Menu${NC}
+1. ${CB}Vmess Menu${NC}    4. ${CB}SS Menu${NC}
+2. ${CB}Vless Menu${NC}    5. ${CB}Bot Menu${NC}
+3. ${CB}Trojan Menu${NC}   6. ${CB}Other Menu${NC}
 ${BB}————————————————————————————————${NC}
      ${MB}Autoscript Mod By San${NC}
 ${BB}————————————————————————————————${NC}
@@ -58,6 +58,7 @@ case $opt in
     2) clear ; vlessmenu ;;
     3) clear ; trojanmenu ;;
     4) clear ; sodosokmenu ;;
-    5) clear ; settingmenu ;;
+    5) clear ; echo -e "Comming Soon" ;;
+    6) clear ; settingmenu ;;
     *) echo -e "${YB}Invalid input${NC}" ; sleep 1 ; menu ;;
 esac
