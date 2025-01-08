@@ -460,22 +460,25 @@ wget -q ${HOSTING}/other/xp2
 wget -q ${HOSTING}/xray/ss/create_ss
 wget -q ${HOSTING}/xray/ss/delete_ss
 wget -q ${HOSTING}/xray/ss/renew_ss
-wget -q ${HOSTING}/xray/vmess/list_ss
+wget -q ${HOSTING}/xray/ss/list_ss
 
 wget -q ${HOSTING}/xray/trojan/create_trojan
 wget -q ${HOSTING}/xray/trojan/delete_trojan
 wget -q ${HOSTING}/xray/trojan/renew_trojan
-wget -q ${HOSTING}/xray/vmess/list_trojan
+wget -q ${HOSTING}/xray/trojan/list_trojan
+wget -q ${HOSTING}/xray/trojan/trojan_custom
 
 wget -q ${HOSTING}/xray/vless/create_vless
 wget -q ${HOSTING}/xray/vless/delete_vless
 wget -q ${HOSTING}/xray/vless/renew_vless
-wget -q ${HOSTING}/xray/vmess/list_vless
+wget -q ${HOSTING}/xray/vless/list_vless
+wget -q ${HOSTING}/xray/vless/vless_custom
 
 wget -q ${HOSTING}/xray/vmess/create_vmess
 wget -q ${HOSTING}/xray/vmess/delete_vmess
 wget -q ${HOSTING}/xray/vmess/renew_vmess
 wget -q ${HOSTING}/xray/vmess/list_vmess
+wget -q ${HOSTING}/xray/vmess/vmess_custom
 
 wget -q ${HOSTING}/traffic.py
 
