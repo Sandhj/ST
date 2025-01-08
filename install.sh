@@ -487,6 +487,22 @@ cd
 chmod +x /root/san/*
 mv /root/san/* /usr/bin/
 
+menu_default() {
+    cat >/root/.profile <<EOF
+# ~/.profile: executed by Bourne-compatible login shells.
+if [ "$BASH" ]; then
+    if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+    fi
+fi
+mesg n || true
+menu
+EOF
+}
+
+#Pasang Default Menu Ketika Login VPS
+menu_default
+
 cd
 echo "0 0 * * * root xp2" >> /etc/crontab
 echo "*/3 * * * * root clear-log" >> /etc/crontab
