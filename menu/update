@@ -79,7 +79,8 @@ mv /root/san/* /usr/bin/
 }
 
 main_script &
-loading_bar $!
+
+echo -e "${GB}Proses Update :${NC}" loading_bar $!
 
 echo -e "${GB}Update Selesai✓${NC}"
 
