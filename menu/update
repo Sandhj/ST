@@ -45,6 +45,7 @@ wget -q ${HOSTING}/other/log-xray
 wget -q ${HOSTING}/other/route-xray
 wget -q ${HOSTING}/other/update-xray
 wget -q ${HOSTING}/other/xp2
+wget -q ${HOSTING}/other/update
 
 wget -q ${HOSTING}/xray/ss/create_ss
 wget -q ${HOSTING}/xray/ss/delete_ss
