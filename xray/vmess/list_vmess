@@ -3,7 +3,7 @@
 CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 
 echo "——————————————————————————————————"
-echo " User                Expired"
+echo " User              Expired"
 echo "——————————————————————————————————"
 
 # Variabel untuk menyimpan daftar nama pengguna yang sudah diproses
