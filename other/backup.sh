@@ -1,4 +1,7 @@
+clear
 mkdir -p /root/user/
+echo -e "Sedang Menyiapkan Autobackup. . ."
+sleep 2
 read -p "Masukkan Token Bot Anda :" TOKEN
 read -p "Masukkan ID Anda :" ID
 
