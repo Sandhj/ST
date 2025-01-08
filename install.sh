@@ -445,6 +445,7 @@ wget -q ${HOSTING}/menu/sodosokmenu
 wget -q ${HOSTING}/menu/trojanmenu
 wget -q ${HOSTING}/menu/vlessmenu
 wget -q ${HOSTING}/menu/vmessmenu
+wget -q ${HOSTING}/menu/update
 
 wget -q ${HOSTING}/other/about
 wget -q ${HOSTING}/other/cek-xray
@@ -455,7 +456,6 @@ wget -q ${HOSTING}/other/log-xray
 wget -q ${HOSTING}/other/route-xray
 wget -q ${HOSTING}/other/update-xray
 wget -q ${HOSTING}/other/xp2
-wget -q ${HOSTING}/other/update
 
 wget -q ${HOSTING}/xray/ss/create_ss
 wget -q ${HOSTING}/xray/ss/delete_ss
