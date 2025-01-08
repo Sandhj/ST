@@ -59,4 +59,5 @@ sleep 2
 echo -e "Sukses✓. . . ( Enter Untuk Kembali ke menu)"
 read
 
+rm backup.sh
 menu
