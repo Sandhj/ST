@@ -20,6 +20,7 @@ WB='\e[37;1m'    # White Bold
     echo -e " ${MB}[2]${NC} ${YB}Renew Account${NC}"
     echo -e " ${MB}[3]${NC} ${YB}List Account${NC}"
     echo -e " ${MB}[4]${NC} ${YB}Delete Accoount${NC}"
+    echo -e " ${MB}[5]${NC} ${YB}Custom Accoount${NC}"
     echo -e " ${GB}[0]${NC} ${GB}Main Menu${NC}"
     echo -e "${BB}———————————————————————————————————————${NC}"
     read -p " Select Menu :  " opt
@@ -29,6 +30,7 @@ WB='\e[37;1m'    # White Bold
         2) clear ; renew_vless ;;
         3) clear ; list_vless ;;
         4) clear ; delete_vless ;;
+        5) clear ; vless_custom ;;
         0) clear ; menu ;;
         *) echo -e "${YB}Invalid input${NC}" ; sleep 1 ; vlessmenu ;;
     esac
