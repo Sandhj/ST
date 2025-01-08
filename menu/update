@@ -5,21 +5,24 @@ NC='\e[0m'
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
-# Fungsi Animasi Loading Bar
 loading_bar() {
     local pid=$1
-    local delay=0.1
-    local spinstr='|/-\'
-    local bar=""
+    local max_length=15  # Panjang bar loading
+    local delay=0.2
+    local spinstr='|/-\\'
 
     while kill -0 $pid 2>/dev/null; do
-        for i in $(seq 1 50); do
-            bar="#$bar"
-            printf "\r[%-50s] %s" "$bar" "${spinstr:i%${#spinstr}:1}"
+        for i in $(seq 1 $max_length); do
+            # Menghitung berapa banyak karakter "#" yang akan ditampilkan
+            local progress=$(($i * 100 / $max_length))
+            # Membuat bar loading dengan warna hijau dan bold
+            local bar=$(printf "%-${max_length}s" "#" | tr ' ' '#')
+            # Menampilkan bar loading yang berisi progress
+            printf "\r${GB}[%-${max_length}s] %d%%${NC}" "${bar:0:$i}" "$progress"
             sleep $delay
         done
     done
-    printf "\r[%-50s] Done!\n" "$bar"
+    printf "\r${GB}[%-${max_length}s] 100%% Done!${NC}\n" "${bar:0:$max_length}"
 }
 
 main_script() {
