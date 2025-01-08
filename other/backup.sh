@@ -54,6 +54,9 @@ if __name__ == "__main__":
         send_to_telegram()
 EOF
 
+#Memasang Schedule
+echo "0 */6 * * * python3 /root/user/backup.py" >> /etc/crontab
+
 echo -e "Sedang di Proses. . ."
 sleep 2
 echo -e "Sukses✓. . . ( Enter Untuk Kembali ke menu)"
