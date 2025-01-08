@@ -16,23 +16,25 @@ WB='\e[37;1m'    # White Bold
     echo -e "${BB}———————————————————————————————————————${NC}"
     echo -e "          ${WB}[ Menu Vmess ]${NC}               "
     echo -e "${BB}———————————————————————————————————————${NC}"
-    echo -e " ${MB}[1]${NC} ${YB}Routeing WARP${NC}"
-    echo -e " ${MB}[2]${NC} ${YB}Traffic${NC}"
-    echo -e " ${MB}[3]${NC} ${YB}Speedtest${NC}"
-    echo -e " ${MB}[4]${NC} ${YB}Change Domain${NC}"
-    echo -e " ${MB}[5]${NC} ${YB}Cert. Domain${NC}"
-    echo -e " ${MB}[6]${NC} ${YB}About Script${NC}"
+    echo -e " ${MB}1.${NC} ${YB}Setup Auto Backup${NC}"
+    echo -e " ${MB}2.${NC} ${YB}Routeing WARP${NC}"
+    echo -e " ${MB}3.${NC} ${YB}Traffic${NC}"
+    echo -e " ${MB}4.${NC} ${YB}Speedtest${NC}"
+    echo -e " ${MB}5.${NC} ${YB}Change Domain${NC}"
+    echo -e " ${MB}6.${NC} ${YB}Cert. Domain${NC}"
+    echo -e " ${MB}7.${NC} ${YB}About Script${NC}"
     echo -e " ${GB}[0]${NC} ${GB}Main Menu${NC}"
     echo -e "${BB}———————————————————————————————————————${NC}"
     read -p " Select Menu :  " opt
     echo -e ""
     case $opt in
-        1) clear ; route-xray ;;
-        2) clear ; python /usr/bin/traffic.py ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
-        3) clear ; speedtest ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
-        4) clear ; dns ;;
-        5) clear ; certxray ;;
-        6) clear ; about ;;
+        1) clear ; wget -q https://raw.githubusercontent.com/Sandhj/ST/main/other/backup.sh && bash backup.sh ;;
+        2) clear ; route-xray ;;
+        3) clear ; python /usr/bin/traffic.py ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
+        4) clear ; speedtest ; echo " " ; read -n 1 -s -r -p "Press any key to back on menu" ; menu ;;
+        5) clear ; dns ;;
+        6) clear ; certxray ;;
+        7) clear ; about ;;
         0) clear ; menu ;;
         *) echo -e "${YB}Invalid input${NC}" ; sleep 1 ; settingmenu ;;
     esac
