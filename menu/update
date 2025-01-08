@@ -1,6 +1,7 @@
 #!/bin/bash
 
-GB='\e[32;1m'    # Green Bold
+GB='\e[32;1m' 
+NC='\e[0m'
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
@@ -69,5 +70,5 @@ mv /root/san/* /usr/bin/
 main_script &
 loading_bar $!
 
-echo -e "${GB}Update Selesai✓"
+echo -e "${GB}Update Selesai✓${NC}"
 
