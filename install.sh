@@ -504,6 +504,7 @@ EOF
 menu_default
 
 cd
+echo "0 5 * * * /sbin/reboot" >> /etc/crontab
 echo "0 0 * * * root xp2" >> /etc/crontab
 echo "*/3 * * * * root clear-log" >> /etc/crontab
 systemctl restart cron
