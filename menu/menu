@@ -17,7 +17,7 @@ config_file="/usr/local/etc/xray/config/04_inbounds.json"
 vmess=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
 vless=$(( $(grep -c "##!" "$config_file" 2>/dev/null || echo 0) / 4 ))
 trojan=$(( $(grep -c "##?" "$config_file" 2>/dev/null || echo 0) / 6 ))
-ss=$(( $(grep -c "##@" "$config_file" 2>/dev/null || echo 0) / 3 ))
+ss=$(( $(grep -c "##@" "$config_file" 2>/dev/null || echo 0) / 6 ))
 
 
 # Fungsi untuk memeriksa status layanan
