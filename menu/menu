@@ -12,6 +12,17 @@ MB='\e[35;1m'    # Magenta Bold
 CB='\e[36;1m'    # Cyan Bold
 WB='\e[37;1m'    # White Bold
 
+# Hitung User
+config_file="/usr/local/etc/xray/config/04_inbounds.json"
+vmess=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
+vless=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
+trojan=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
+ss=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
+
+
+
+
+
 # Fungsi untuk memeriksa status layanan
 check_service() {
     local service_name=$1
