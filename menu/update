@@ -1,3 +1,7 @@
+#!/bin/bash
+
+GB='\e[32;1m'    # Green Bold
+
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
 loading() {
@@ -60,5 +64,5 @@ mv /root/san/* /usr/bin/
 main_script &
 loading $!
 
-echo -e "Update Selesai✓"
+echo -e "${GB}Update Selesai✓"
 
