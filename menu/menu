@@ -32,24 +32,24 @@ check_service() {
 
 clear
 LAYOUT="
-${BB}————————————————————————————————${NC}
-          ${CB}SAN TUNNELING${NC}
-${BB}————————————————————————————————${NC}
-Xray Service : $(check_service xray.service)
-Wireproxy    : $(check_service wireproxy.service)
-Nginx        : $(check_service nginx)
-${BB}————————————————————————————————${NC}
-      ${GB}Vmess Account   : ${YB} $vmess${NC}
-      ${GB}Vless Account   : ${YB} $vless${NC}
-      ${GB}Trojan Account  : ${YB} $trojan${NC}
-      ${GB}Sodosok Account : ${RB} $ss${NC}
-${BB}————————————————————————————————${NC}
-1. ${CB}Vmess Menu${NC}    4. ${CB}SS Menu${NC}
-2. ${CB}Vless Menu${NC}    5. ${CB}Bot Menu${NC}
-3. ${CB}Trojan Menu${NC}   6. ${CB}Other Menu${NC}
-${BB}————————————————————————————————${NC}
-     ${MB}Autoscript Mod By San${NC}
-${BB}————————————————————————————————${NC}
+  ${BB}————————————————————————————————${NC}
+            ${CB}SAN TUNNELING${NC}
+  ${BB}————————————————————————————————${NC}
+  Xray Service : $(check_service xray.service)
+  Wireproxy    : $(check_service wireproxy.service)
+  Nginx        : $(check_service nginx)
+  ${BB}————————————————————————————————${NC}
+        ${GB}Vmess Account   : ${YB} $vmess${NC}
+        ${GB}Vless Account   : ${YB} $vless${NC}
+        ${GB}Trojan Account  : ${YB} $trojan${NC}
+        ${GB}Sodosok Account : ${RB} $ss${NC}
+  ${BB}————————————————————————————————${NC}
+  1. ${CB}Vmess Menu${NC}    4. ${CB}SS Menu${NC}
+  2. ${CB}Vless Menu${NC}    5. ${CB}Bot Menu${NC}
+  3. ${CB}Trojan Menu${NC}   6. ${CB}Other Menu${NC}
+  ${BB}————————————————————————————————${NC}
+       ${MB}Autoscript Mod By San${NC}
+  ${BB}————————————————————————————————${NC}
 "
 echo -e "$LAYOUT"    
 read -p " Select Menu :  " opt
