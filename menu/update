@@ -4,16 +4,21 @@ GB='\e[32;1m'    # Green Bold
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
-loading() {
-    echo -n "Loading"
-    while kill -0 $1 2>/dev/null; do
-        for i in {1..3}; do
-            echo -n "."
-            sleep 0.5
+# Fungsi Animasi Loading Bar
+loading_bar() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='|/-\'
+    local bar=""
+
+    while kill -0 $pid 2>/dev/null; do
+        for i in $(seq 1 50); do
+            bar="#$bar"
+            printf "\r[%-50s] %s" "$bar" "${spinstr:i%${#spinstr}:1}"
+            sleep $delay
         done
-        echo -ne "\rLoading   \rLoading"
     done
-    echo " Done!"
+    printf "\r[%-50s] Done!\n" "$bar"
 }
 
 main_script() {
@@ -62,7 +67,7 @@ mv /root/san/* /usr/bin/
 }
 
 main_script &
-loading $!
+loading_bar $!
 
 echo -e "${GB}Update Selesai✓"
 
