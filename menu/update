@@ -1,0 +1,42 @@
+cd
+mkdir -p /root/san
+cd /root/san
+wget -q ${HOSTING}/menu/menu
+wget -q ${HOSTING}/menu/settingmenu
+wget -q ${HOSTING}/menu/sodosokmenu
+wget -q ${HOSTING}/menu/trojanmenu
+wget -q ${HOSTING}/menu/vlessmenu
+wget -q ${HOSTING}/menu/vmessmenu
+
+wget -q ${HOSTING}/other/about
+wget -q ${HOSTING}/other/cek-xray
+wget -q ${HOSTING}/other/certxray
+wget -q ${HOSTING}/other/clear-log
+wget -q ${HOSTING}/other/dns
+wget -q ${HOSTING}/other/log-xray
+wget -q ${HOSTING}/other/route-xray
+wget -q ${HOSTING}/other/update-xray
+wget -q ${HOSTING}/other/xp2
+
+wget -q ${HOSTING}/xray/ss/create_ss
+wget -q ${HOSTING}/xray/ss/delete_ss
+wget -q ${HOSTING}/xray/ss/renew_ss
+
+wget -q ${HOSTING}/xray/trojan/create_trojan
+wget -q ${HOSTING}/xray/trojan/delete_trojan
+wget -q ${HOSTING}/xray/trojan/renew_trojan
+
+wget -q ${HOSTING}/xray/vless/create_vless
+wget -q ${HOSTING}/xray/vless/delete_vless
+wget -q ${HOSTING}/xray/vless/renew_vless
+
+wget -q ${HOSTING}/xray/vmess/create_vmess
+wget -q ${HOSTING}/xray/vmess/delete_vmess
+wget -q ${HOSTING}/xray/vmess/renew_vmess
+
+wget -q ${HOSTING}/traffic.py
+
+#Berikan Izin Eksekusi dan memindahkan ke /usr/bin
+cd
+chmod +x /root/san/*
+mv /root/san/* /usr/bin/
