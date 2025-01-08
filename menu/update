@@ -1,3 +1,18 @@
+HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
+
+loading() {
+    echo -n "Loading"
+    while kill -0 $1 2>/dev/null; do
+        for i in {1..3}; do
+            echo -n "."
+            sleep 0.5
+        done
+        echo -ne "\rLoading   \rLoading"
+    done
+    echo " Done!"
+}
+
+main script() {
 cd
 mkdir -p /root/san
 cd /root/san
@@ -40,3 +55,10 @@ wget -q ${HOSTING}/traffic.py
 cd
 chmod +x /root/san/*
 mv /root/san/* /usr/bin/
+}
+
+main_script &
+loading $!
+
+echo -e "Update Selesai✓"
+
