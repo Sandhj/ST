@@ -7,7 +7,7 @@ echo "    DELETE XRAY TROJAN ACCOUNT    "
 echo "——————————————————————————————————"
 
 
-USER_LIST=$(grep "##?" "$FILE" | awk -F'##?' '{print $2}' | awk '{print $1}' | sort | uniq)
+USER_LIST=$(grep "#!" "$FILE" | awk -F'#!' '{print $2}' | awk '{print $1}' | sort | uniq)
 USER_LIST_WITH_NUM=$(echo "$USER_LIST" | nl)
 echo "$USER_LIST_WITH_NUM"
 echo "——————————————————————————————————"
@@ -18,13 +18,13 @@ read -p "Input Nomor (atau ketik 'all' untuk menghapus semua): " INPUT
 if [[ "$INPUT" == "all" ]]; then
     echo "Hapus Semua User..."
     for USER in $USER_LIST; do
-        sed -i "/##? $USER/{N;d}" "$FILE"
+        sed -i "/#! $USER/{N;d}" "$FILE"
     done
     echo "Semua User Telah Di Hapus"
 elif [[ "$INPUT" =~ ^[0-9]+$ ]]; then
     SELECTED_USER=$(echo "$USER_LIST" | sed -n "${INPUT}p")
     if [[ -n "$SELECTED_USER" ]]; then
-        sed -i "/##? $SELECTED_USER/{N;d}" "$FILE"
+        sed -i "/#! $SELECTED_USER/{N;d}" "$FILE"
         echo "Sukses Menghapus '$SELECTED_USER'"
     else
         echo "Nomor user tidak valid."
