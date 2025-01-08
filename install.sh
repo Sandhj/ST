@@ -245,7 +245,7 @@ print_msg $YB "Zona waktu berhasil diatur."
 
 print_msg $YB "Instalasi WireProxy"
 rm -rf /usr/local/bin/wireproxy >> /dev/null 2>&1
-wget -O /usr/local/bin/wireproxy https://github.com/Sandhj/ST/main/wireproxy
+wget -O /usr/local/bin/wireproxy ${HOSTING}/wireproxy
 chmod +x /usr/local/bin/wireproxy
 check_success "Gagal instalasi WireProxy."
 print_msg $YB "Mengkonfigurasi WireProxy"
@@ -282,9 +282,9 @@ Restart=always
 WantedBy=multi-user.target
 END
 check_success "Gagal membuat service untuk WireProxy."
+sudo systemctl daemon-reload
 sudo systemctl enable wireproxy
 sudo systemctl start wireproxy
-sudo systemctl daemon-reload
 sudo systemctl restart wireproxy
 print_msg $YB "Instalasi selesai."
 sleep 3
