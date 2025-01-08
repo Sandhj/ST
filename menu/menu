@@ -15,12 +15,9 @@ WB='\e[37;1m'    # White Bold
 # Hitung User
 config_file="/usr/local/etc/xray/config/04_inbounds.json"
 vmess=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
-vless=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
-trojan=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
-ss=$(( $(grep -c "###" "$config_file" 2>/dev/null || echo 0) / 3 ))
-
-
-
+vless=$(( $(grep -c "##!" "$config_file" 2>/dev/null || echo 0) / 6 ))
+trojan=$(( $(grep -c "##?" "$config_file" 2>/dev/null || echo 0) / 6 ))
+ss=$(( $(grep -c "##@" "$config_file" 2>/dev/null || echo 0) / 5 ))
 
 
 # Fungsi untuk memeriksa status layanan
@@ -42,10 +39,10 @@ Xray Service : $(check_service xray.service)
 Wireproxy    : $(check_service wireproxy.service)
 Nginx        : $(check_service nginx)
 ${BB}————————————————————————————————${NC}
-      ${GB}Vmess Account   : ${YB}2${NC}
-      ${GB}Vless Account   : ${YB}2${NC}
-      ${GB}Trojan Account  : ${YB}3${NC}
-      ${GB}Sodosok Account : ${RB}0${NC}
+      ${GB}Vmess Account   : ${YB} $vmess${NC}
+      ${GB}Vless Account   : ${YB} $vless${NC}
+      ${GB}Trojan Account  : ${YB} $trojan${NC}
+      ${GB}Sodosok Account : ${RB} $ss${NC}
 ${BB}————————————————————————————————${NC}
 1. ${CB}Vmess Menu${NC}    4. ${CB}Trojan Menu${NC}
 2. ${CB}Vless Menu${NC}    5. ${CB}Sodosok Menu${NC}
