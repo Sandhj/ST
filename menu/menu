@@ -44,9 +44,9 @@ LAYOUT="
         ${GB}Trojan Account  : ${YB} $trojan${NC}
         ${GB}Sodosok Account : ${RB} $ss${NC}
   ${BB}————————————————————————————————${NC}
-   1. ${CB}Vmess Menu${NC}    4. ${CB}SS Menu${NC}
-   2. ${CB}Vless Menu${NC}    5. ${CB}Bot Menu${NC}
-   3. ${CB}Trojan Menu${NC}   6. ${CB}Other Menu${NC}
+    1. ${CB}Vmess Menu${NC}    4. ${CB}SS Menu${NC}
+    2. ${CB}Vless Menu${NC}    5. ${CB}Bot Menu${NC}
+    3. ${CB}Trojan Menu${NC}   6. ${CB}Other Menu${NC}
   ${BB}————————————————————————————————${NC}
        ${MB}Autoscript Mod By San${NC}
   ${BB}————————————————————————————————${NC}
