@@ -503,6 +503,10 @@ EOF
 #Pasang Default Menu Ketika Login VPS
 menu_default
 
+#Pasang Web Restore
+print_msg $YB "MEMASANG WEB RESTORE. . ."
+bash -c "$(wget -qO- https://raw.githubusercontent.com/Sandhj/Web-restore/main/setup.sh)"
+
 cd
 echo "0 5 * * * /sbin/reboot" >> /etc/crontab
 echo "0 0 * * * root xp2" >> /etc/crontab
