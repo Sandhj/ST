@@ -44,7 +44,7 @@ LAYOUT="
   Nginx        : $(check_service nginx)
   ${BB}————————————————————————————————${NC}
        ${GB}Vmess Account   : ${YB} $vmess${NC}
-       ${GB}Vless Account   : ${YB} $vless${NC}
+       ${GB}Vless Account   : ${RB} $vless${NC}
        ${GB}Trojan Account  : ${YB} $trojan${NC}
        ${GB}Sodosok Account : ${RB} $ss${NC}
   ${BB}————————————————————————————————${NC}
