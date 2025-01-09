@@ -2,62 +2,49 @@
 
 GB='\e[32;1m' 
 NC='\e[0m'
-
-
-cd /usr/bin/
-# Daftar file
-files=(
-    "menu"
-    "settingmenu"
-    "sodosokmenu"
-    "trojanmenu"
-    "vlessmenu"
-    "vmessmenu"
-    "update"
-    "about"
-    "cek-xray"
-    "certxray"
-    "clear-log"
-    "dns"
-    "log-xray"
-    "route-xray"
-    "update-xray"
-    "xp2"
-    "create_ss"
-    "delete_ss"
-    "renew_ss"
-    "list_ss"
-    "create_trojan"
-    "delete_trojan"
-    "renew_trojan"
-    "list_trojan"
-    "trojan_custom"
-    "create_vless"
-    "delete_vless"
-    "renew_vless"
-    "list_vless"
-    "vless_custom"
-    "create_vmess"
-    "delete_vmess"
-    "renew_vmess"
-    "list_vmess"
-    "vmess_custom"
-    "traffic.py"
-)
-
-# Hapus semua file
-for file in "${files[@]}"; do
-    if [ -e "$file" ]; then
-        rm -f "$file"
-        echo "File $file dihapus."
-    else
-        echo "File $file tidak ditemukan."
-    fi
-done
-
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 echo -e "${GB}Proses Update, Tunggu Beberapa Saat. . .${NC}"
 
+dell_script() {
+rm /usr/bin/menu
+rm /usr/bin/settingmenu
+rm /usr/bin/sodosokmenu
+rm /usr/bin/trojanmenu
+rm /usr/bin/vlessmenu
+rm /usr/bin/vmessmenu
+rm /usr/bin/update
+rm /usr/bin/about
+rm /usr/bin/cek-xray
+rm /usr/bin/certxray
+rm /usr/bin/clear-log
+rm /usr/bin/dns
+rm /usr/bin/log-xray
+rm /usr/bin/route-xray
+rm /usr/bin/update-xray
+rm /usr/bin/xp2
+rm /usr/bin/create_ss
+rm /usr/bin/delete_ss
+rm /usr/bin/renew_ss
+rm /usr/bin/list_ss
+rm /usr/bin/create_trojan
+rm /usr/bin/delete_trojan
+rm /usr/bin/renew_trojan
+rm /usr/bin/list_trojan
+rm /usr/bin/trojan_custom
+rm /usr/bin/create_vless
+rm /usr/bin/delete_vless
+rm /usr/bin/renew_vless
+rm /usr/bin/list_vless
+rm /usr/bin/vless_custom
+rm /usr/bin/create_vmess
+rm /usr/bin/delete_vmess
+rm /usr/bin/renew_vmess
+rm /usr/bin/list_vmess
+rm /usr/bin/vmess_custom
+rm /usr/bin/traffic.py
+}
+
+dell_script &
 
 cd
 loading_bar() {
