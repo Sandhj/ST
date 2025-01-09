@@ -2,6 +2,57 @@
 
 GB='\e[32;1m' 
 NC='\e[0m'
+# Daftar nama file yang akan dihapus
+files=(
+    "menu"
+    "settingmenu"
+    "sodosokmenu"
+    "trojanmenu"
+    "vlessmenu"
+    "vmessmenu"
+    "update"
+    "about"
+    "cek-xray"
+    "certxray"
+    "clear-log"
+    "dns"
+    "log-xray"
+    "route-xray"
+    "update-xray"
+    "xp2"
+    "create_ss"
+    "delete_ss"
+    "renew_ss"
+    "list_ss"
+    "create_trojan"
+    "delete_trojan"
+    "renew_trojan"
+    "list_trojan"
+    "trojan_custom"
+    "create_vless"
+    "delete_vless"
+    "renew_vless"
+    "list_vless"
+    "vless_custom"
+    "create_vmess"
+    "delete_vmess"
+    "renew_vmess"
+    "list_vmess"
+    "vmess_custom"
+    "traffic.py"
+)
+
+# Direktori target
+TARGET_DIR="/usr/bin/"
+
+# Loop untuk menghapus file berdasarkan nama
+for file in "${files[@]}"; do
+    # Menentukan path lengkap file
+    file_path="${TARGET_DIR}${file}"
+    
+    # Menghapus file tanpa output jika ditemukan
+    rm -f "$file_path"
+done
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 echo -e "${GB}Proses Update, Tunggu Beberapa Saat. . .${NC}" 
