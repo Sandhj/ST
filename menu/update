@@ -2,7 +2,8 @@
 
 GB='\e[32;1m' 
 NC='\e[0m'
-# Daftar nama file yang akan dihapus
+
+# Daftar file
 files=(
     "menu"
     "settingmenu"
@@ -42,21 +43,21 @@ files=(
     "traffic.py"
 )
 
-# Direktori target
-TARGET_DIR="/usr/bin/"
-
-# Loop untuk menghapus file berdasarkan nama
+# Hapus semua file
 for file in "${files[@]}"; do
-    # Menentukan path lengkap file
-    file_path="${TARGET_DIR}${file}"
-    
-    # Menghapus file tanpa output jika ditemukan
-    rm -f "$file_path"
+    if [ -e "$file" ]; then
+        rm -f "$file"
+        echo "File $file dihapus."
+    else
+        echo "File $file tidak ditemukan."
+    fi
 done
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
-echo -e "${GB}Proses Update, Tunggu Beberapa Saat. . .${NC}" 
+echo -e "${GB}Proses Update, Tunggu Beberapa Saat. . .${NC}"
 
+
+cd
 loading_bar() {
     local pid=$1
     local max_length=25  # Panjang bar loading
