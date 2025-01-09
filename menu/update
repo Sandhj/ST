@@ -3,6 +3,8 @@
 GB='\e[32;1m' 
 NC='\e[0m'
 
+
+cd /usr/bin/
 # Daftar file
 files=(
     "menu"
