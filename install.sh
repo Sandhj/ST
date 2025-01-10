@@ -42,6 +42,70 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+verif_ip() {
+    # Ambil informasi IP dan tanggal dari URL
+    url="https://raw.githubusercontent.com/Sandhj/registrasi-ip/main/IP"
+    ip_date=$(curl -s $url)
+
+    # Ambil IP dan Tanggal dari data yang diambil
+    ip=$(echo $ip_date | awk '{print $1}')
+    date=$(echo $ip_date | awk '{print $2}')
+
+    # Ambil IP dan Tanggal hari ini
+    current_ip=$(curl -s https://ipinfo.io/ip)
+    current_date=$(date +%Y-%m-%d)
+    
+
+    # Hitung tanggal satu hari setelah tanggal hari ini
+    expiry_date=$(date -d "$current_date + 1 day" +%Y-%m-%d)
+
+    # Periksa apakah IP cocok dan apakah tanggal tidak kadaluarsa
+    if [[ "$current_ip" == "$ip" && ( "$date" == "$current_date" || "$date" == "$expiry_date" ) ]]; then
+        echo "————————————————————————————————————"
+        echo "           ${GB}Success Massage !! ${NC} "
+        echo "————————————————————————————————————"
+        echo "    ${GB}   IP ANDA TERVERIFIKASI ✓  ${NC}   "
+        echo "————————————————————————————————————"
+    else
+        echo "————————————————————————————————————"
+        echo "           ${RB}Eror Massage !! ${NC} "
+        echo "————————————————————————————————————"
+        echo "${GB}     Anda Belum Terdaftar Untuk"
+        echo "   Menggunakan Script ini Silahkan "
+        echo "            Registrasi ke ${NC}          "
+        echo "  Tele : Sanmaxx | Wa : 085155208019"
+        echo "————————————————————————————————————"
+        exit 1
+    fi
+}
+
+
+# Script untuk Verifikasi Pengguna
+while true; do
+    echo "Pilih tipe pengguna:"
+    echo "1. Owner SC"
+    echo "2. Pengguna"
+    read -p "Masukkan pilihan Anda (1/2): " pilihan
+
+    if [ "$pilihan" == "1" ]; then
+        read -sp "Masukkan Password Owner: " password
+        echo
+        if [ "$password" == "@sandi" ]; then
+            echo -e "${GB}Selamat Datang Tuan${NC}"
+            sleep 2
+            break
+        else
+            echo -e "Password Salah, Jika Kamu Pengguna Silahkan Memilih Opsi No.2"
+        fi
+    elif [ "$pilihan" == "2" ]; then
+        verif_ip
+        break
+    else
+        echo -e "Pilihan tidak valid. Silakan coba lagi."
+    fi
+done
+clear
+# ============= BATAS AWAL SCRIPT UTAMA ============
 mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
 mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
 touch /usr/local/etc/xray/dns/domain
@@ -58,8 +122,6 @@ validate_domain() {
 # Fungsi untuk meminta input domain
 input_domain() {
     while true; do
-        echo -e "${YB}Input Domain${NC}"
-        echo " "
         read -rp $'\e[33;1mInput domain kamu: \e[0m' -e dns
 
         if [ -z "$dns" ]; then
