@@ -105,7 +105,7 @@ LAYOUT="
         Sisa Hari: ${GB}$remaining_days$Admin ${NC}
   ${BB}————————————————————————————————${NC}
        ${MB}Autoscript Mod By San${NC}
-            $uptime_info
+    ${GB} [ $uptime_info ]${NC}
   ${BB}————————————————————————————————${NC}
 "
 echo -e "$LAYOUT"    
