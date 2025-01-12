@@ -55,7 +55,51 @@ if __name__ == "__main__":
 EOF
 
 #Memasang Schedule
-echo "0 */6 * * * python3 /root/user/backup.py" >> /etc/crontab
+SERVICE_NAME="backup"
+SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
+TIMER_FILE="/etc/systemd/system/${SERVICE_NAME}.timer"
+SCRIPT_PATH="/root/user/backup.py"
+
+# Pastikan script backup.py ada
+if [ ! -f "$SCRIPT_PATH" ]; then
+    echo "Error: Script $SCRIPT_PATH tidak ditemukan!"
+    exit 1
+fi
+
+# Buat service file
+cat <<EOL > $SERVICE_FILE
+[Unit]
+Description=Backup Script Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 $SCRIPT_PATH
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+# Buat timer file
+cat <<EOL > $TIMER_FILE
+[Unit]
+Description=Run Backup Script Every 3 Hours
+
+[Timer]
+OnCalendar=*-*-* 00,03,06,09,12,15,18,21:00:00
+Unit=${SERVICE_NAME}.service
+
+[Install]
+WantedBy=timers.target
+EOL
+
+# Reload systemd
+systemctl daemon-reload
+
+# Enable dan start timer
+systemctl enable ${SERVICE_NAME}.timer
+systemctl start ${SERVICE_NAME}.timer
 
 echo -e "Sedang di Proses. . ."
 sleep 2
