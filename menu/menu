@@ -80,6 +80,9 @@ check_service() {
     fi
 }
 
+#Ambil Info Uptime VPS
+uptime_info=$(uptime -p)
+
 clear
 LAYOUT="
   ${BB}————————————————————————————————${NC}
@@ -102,6 +105,7 @@ LAYOUT="
         Sisa Hari: ${GB}$remaining_days$Admin ${NC}
   ${BB}————————————————————————————————${NC}
        ${MB}Autoscript Mod By San${NC}
+                  $uptime_info
   ${BB}————————————————————————————————${NC}
 "
 echo -e "$LAYOUT"    
