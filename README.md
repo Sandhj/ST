@@ -32,4 +32,4 @@ wget -q https://raw.githubusercontent.com/Sandhj/ST/main/install.sh.x && chmod +
 ## For Registrasi 
 - Telegram : Sanmaxx
 - WhatsApp : 085155208019
-1IP = 3.000
+- 1IP = 3.000
