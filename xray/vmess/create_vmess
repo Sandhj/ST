@@ -2,14 +2,7 @@
 
 # Definisi Warna
 NC='\e[0m'
-DEFBOLD='\e[39;1m'
-RB='\e[31;1m'
-GB='\e[32;1m'
-YB='\e[33;1m'
 BB='\e[34;1m'
-MB='\e[35;1m'
-CB='\e[36;1m'
-WB='\e[37;1m'
 
 # Fungsi untuk menghasilkan UUID
 generate_uuid() {
