@@ -58,4 +58,4 @@ Expired On  : $exp4
 "
 
 echo "$TEXT" > /root/project/${user}_output.txt
-echo -e "TEXT"
+echo -e "$TEXT"
