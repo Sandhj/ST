@@ -47,14 +47,14 @@ exp4=`date -d "$exp3 days" +"%Y-%m-%d"`
 sed -i "/### $user/c\### $user $exp4" /usr/local/etc/xray/config/04_inbounds.json
 systemctl restart xray
 clear
-echo -e "${BB}————————————————————————————————————————————————————${NC}"
-echo -e "          ${WB}Account Success Extended${NC}         "
-echo -e "${BB}————————————————————————————————————————————————————${NC}"
-echo -e " ${YB}Client Name :${NC} $user"
-echo -e " ${YB}Expired On  :${NC} $exp4"
-echo -e "${BB}————————————————————————————————————————————————————${NC}"
-echo ""
-read -n 1 -s -r -p "Press any key to back on menu"
-clear
-allxray
-fi
+
+TEXT="
+————————————————————————————————————————————————————
+Account Success Extended${NC}         
+————————————————————————————————————————————————————
+Client Name : $user
+Expired On  : $exp4
+————————————————————————————————————————————————————
+"
+
+echo "TEXT" 
