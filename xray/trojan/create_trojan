@@ -84,8 +84,5 @@ GRPC        : $trojanlink5
 TCP         : $trojanlink6
 ——————————————————————————————
 "
-
-echo "$TEXT"
-read -n 1 -s -r -p "Press any key to go back to menu"
-clear
-menu
+echo "$TEXT" > /root/project/${user}_output.txt
+echo -e "$TEXT"
