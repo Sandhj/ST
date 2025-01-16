@@ -47,7 +47,7 @@ if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
                 sed -i "s/$LINE/### $SELECTED_USER $NEW_DATE/" "$FILE"
             done <<< "$SELECTED_LINES"
             TEXT="Account Succesfully Renewed"
-            echo "$TEXT" > /root/project/${user}_output.txt
+            echo "$TEXT" > /root/project/${SELECTED_USER}_output.txt
             echo -e "$TEXT"
             echo 
         else
@@ -58,6 +58,6 @@ if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
     fi
 else
     TEXT="Username Tidak Ditemukan. Pastikan Username Benar, Huruf kapital Dan Angka Harus Sama" 
-    echo "$TEXT" > /root/project/${user}_output.txt
+    echo "$TEXT" > /root/project/${SELECTED_USER}_output.txt
     echo -e "$TEXT"
 fi
