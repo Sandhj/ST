@@ -49,7 +49,6 @@ if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
             TEXT="Account Succesfully Renewed"
             echo "$TEXT" > /root/project/${SELECTED_USER}_output.txt
             echo -e "$TEXT"
-            echo 
         else
             echo "Input masa aktif harus berupa angka."
         fi
