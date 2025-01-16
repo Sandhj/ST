@@ -23,7 +23,7 @@ if [[ -z "$USER_LIST" ]]; then
 fi
 
 # Tampilkan daftar user unik
-echo "|     $USER_LIST"
+echo "$USER_LIST"
 echo "——————————————————————————————————"
 
 # Input nama user dari pengguna
