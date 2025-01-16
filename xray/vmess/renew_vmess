@@ -27,12 +27,12 @@ echo "$USER_LIST"
 echo "——————————————————————————————————"
 
 # Input nama user dari pengguna
-read -p "Masukkan Nama User: " SELECTED_USER
+read -p "Masukkan Nama User: " user
 
 # Validasi apakah user ada
-if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
+if echo "$USER_LIST" | grep -qw "$user"; then
     # Ambil semua baris dengan nama user yang dipilih
-    SELECTED_LINES=$(grep "### $SELECTED_USER " "$FILE")
+    SELECTED_LINES=$(grep "### $user " "$FILE")
 
     # Validasi apakah ada baris yang cocok
     if [[ -n "$SELECTED_LINES" ]]; then
@@ -44,19 +44,19 @@ if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
             while IFS= read -r LINE; do
                 CURRENT_DATE=$(echo "$LINE" | awk '{print $3}')
                 NEW_DATE=$(date -d "$CURRENT_DATE +$EXP days" +"%Y-%m-%d")
-                sed -i "s/$LINE/### $SELECTED_USER $NEW_DATE/" "$FILE"
+                sed -i "s/$LINE/### $user $NEW_DATE/" "$FILE"
             done <<< "$SELECTED_LINES"
             TEXT="Account Succesfully Renewed"
-            echo "$TEXT" > /root/project/${SELECTED_USER}_output.txt
+            echo "$TEXT" > /root/project/${user}_output.txt
             echo -e "$TEXT"
         else
             echo "Input masa aktif harus berupa angka."
         fi
     else
-        echo "Tanggal masa aktif untuk user '$SELECTED_USER' tidak ditemukan."
+        echo "Tanggal masa aktif untuk user '$user' tidak ditemukan."
     fi
 else
     TEXT="Username Tidak Ditemukan. Pastikan Username Benar, Huruf kapital Dan Angka Harus Sama" 
-    echo "$TEXT" > /root/project/${SELECTED_USER}_output.txt
+    echo "$TEXT" > /root/project/${user}_output.txt
     echo -e "$TEXT"
 fi
