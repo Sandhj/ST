@@ -1,34 +1,59 @@
 #!/bin/bash
 
+# Lokasi file konfigurasi Xray
 FILE="/usr/local/etc/xray/config/04_inbounds.json"
 
 echo "——————————————————————————————————"
-echo "     DELETE XRAY VMESS ACCOUNT    " 
+echo "    EXTEND XRAY VMESS ACCOUNT    "
 echo "——————————————————————————————————"
 
+# Periksa apakah file konfigurasi ada
+if [[ ! -f "$FILE" ]]; then
+    echo "File konfigurasi tidak ditemukan: $FILE"
+    exit 1
+fi
 
+# Ambil daftar unik user dari file konfigurasi
 USER_LIST=$(grep "###" "$FILE" | awk -F'###' '{print $2}' | awk '{print $1}' | sort | uniq)
-USER_LIST_WITH_NUM=$(echo "$USER_LIST" | nl)
-echo "$USER_LIST_WITH_NUM"
+
+# Periksa apakah ada user dalam file konfigurasi
+if [[ -z "$USER_LIST" ]]; then
+    echo "Tidak ada user yang ditemukan di file konfigurasi."
+    exit 1
+fi
+
+# Tampilkan daftar user unik
+echo "|     $USER_LIST"
 echo "——————————————————————————————————"
 
-read -p "Input Nomor (atau ketik 'all' untuk menghapus semua): " INPUT
+# Input nama user dari pengguna
+read -p "Masukkan Nama User: " SELECTED_USER
 
-# Validasi input
-if [[ "$INPUT" == "all" ]]; then
-    echo "Hapus Semua User..."
-    for USER in $USER_LIST; do
-        sed -i "/### $USER/{N;d}" "$FILE"
-    done
-    echo "Semua User Telah Di Hapus"
-elif [[ "$INPUT" =~ ^[0-9]+$ ]]; then
-    SELECTED_USER=$(echo "$USER_LIST" | sed -n "${INPUT}p")
-    if [[ -n "$SELECTED_USER" ]]; then
-        sed -i "/### $SELECTED_USER/{N;d}" "$FILE"
-        echo "Sukses Menghapus '$SELECTED_USER'"
+# Validasi apakah user ada
+if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
+    # Ambil semua baris dengan nama user yang dipilih
+    SELECTED_LINES=$(grep "### $SELECTED_USER " "$FILE")
+
+    # Validasi apakah ada baris yang cocok
+    if [[ -n "$SELECTED_LINES" ]]; then
+        # Input masa aktif tambahan
+        read -p "Tambahkan Masa Aktif (hari): " EXP
+
+        if [[ "$EXP" =~ ^[0-9]+$ ]]; then
+            # Iterasi setiap baris yang sesuai dan update tanggal
+            while IFS= read -r LINE; do
+                CURRENT_DATE=$(echo "$LINE" | awk '{print $3}')
+                NEW_DATE=$(date -d "$CURRENT_DATE +$EXP days" +"%Y-%m-%d")
+                sed -i "s/$LINE/### $SELECTED_USER $NEW_DATE/" "$FILE"
+            done <<< "$SELECTED_LINES"
+            TEXT="Account Succesfully Renewed"
+            echo 
+        else
+            echo "Input masa aktif harus berupa angka."
+        fi
     else
-        echo "Nomor user tidak valid."
+        echo "Tanggal masa aktif untuk user '$SELECTED_USER' tidak ditemukan."
     fi
 else
-    echo "Input tidak valid. Silakan masukkan nomor atau 'all'."
+    echo "User '$SELECTED_USER' tidak ditemukan di file konfigurasi."
 fi
