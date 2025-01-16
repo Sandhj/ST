@@ -47,6 +47,8 @@ if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
                 sed -i "s/$LINE/### $SELECTED_USER $NEW_DATE/" "$FILE"
             done <<< "$SELECTED_LINES"
             TEXT="Account Succesfully Renewed"
+            echo "$TEXT" > /root/project/${user}_output.txt
+            echo -e "$TEXT"
             echo 
         else
             echo "Input masa aktif harus berupa angka."
@@ -55,5 +57,7 @@ if echo "$USER_LIST" | grep -qw "$SELECTED_USER"; then
         echo "Tanggal masa aktif untuk user '$SELECTED_USER' tidak ditemukan."
     fi
 else
-    echo "User '$SELECTED_USER' tidak ditemukan di file konfigurasi."
+    TEXT="Username Tidak Ditemukan. Pastikan Username Benar, Huruf kapital Dan Angka Harus Sama" 
+    echo "$TEXT" > /root/project/${user}_output.txt
+    echo -e "$TEXT"
 fi
