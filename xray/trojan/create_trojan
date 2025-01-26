@@ -27,9 +27,9 @@ add_xray_config() {
 domain=$(cat /usr/local/etc/xray/dns/domain)
 pwtr=$(openssl rand -hex 4)
 
-echo -e "${BB}———————————————————————————————————————${NC}"
-echo -e "${BB}            Create New User ${NC}           "
-echo -e "${BB}———————————————————————————————————————${NC}"
+#echo -e "${BB}———————————————————————————————————————${NC}"
+#echo -e "${BB}            Create New User ${NC}           "
+#echo -e "${BB}———————————————————————————————————————${NC}"
 read -p "Username :" user
 while true; do
     read -p "Expired :" masaaktif
