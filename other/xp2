@@ -30,7 +30,7 @@ done < "$CONFIG_FILE"
 
 #AUTO REMOVE TROJAN
 while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == *"##?"* ]]; then
+    if [[ "$line" == *"#&?"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
 
         EXPIRATION_DATE=${split[2]}
