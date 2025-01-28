@@ -70,6 +70,9 @@ vless=$(( vless_count / 4 ))
 trojan=$(( trojan_count / 6 ))
 ss=$(( ss_count / 6 ))
 
+total=$((vmess + vless + trojan + ss))
+echo $total
+
 # Fungsi untuk memeriksa status layanan
 check_service() {
     local service_name=$1
