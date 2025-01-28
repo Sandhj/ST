@@ -30,7 +30,7 @@ uuid=$(generate_uuid)
 #echo -e "${BB}———————————————————————————————————————${NC}"
 #echo -e "${BB}            Create New User ${NC}           "
 #echo -e "${BB}———————————————————————————————————————${NC}"
-read -p "Username :" user
+read -p "Username :" username
 while true; do
     read -p "Expired :" masaaktif
     if [[ $masaaktif =~ ^[0-9]+$ ]]; then
@@ -39,6 +39,12 @@ while true; do
         echo "Masukkan Angka Yang Valid"
     fi
 done    
+
+# Membuat 4 huruf besar acak
+random_letters=$(tr -dc 'A-Z' </dev/urandom | head -c 4)
+
+# Menambahkan huruf acak ke username
+user="${username}-${random_letters}"
 
 exp=$(date -d "$masaaktif days" +"%Y-%m-%d") 
 ISP=$(cat /usr/local/etc/xray/org)
