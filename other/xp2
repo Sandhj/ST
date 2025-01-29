@@ -1,53 +1,64 @@
 #!/bin/bash
 
-#GET INFORMASI
+# Konfigurasi file Xray
 CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 CURRENT_DATE=$(date +%Y-%m-%d)
 
-#AUTO REMOVE VMESS
+# Konversi tanggal saat ini ke timestamp
+CUR_TS=$(date -d "$CURRENT_DATE" +%s)
+
+# Auto Remove VMESS jika expired pada hari ini atau lebih lama
 while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" == *"###"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
-
         EXPIRATION_DATE=${split[2]}
-        if [[ "$EXPIRATION_DATE" < "$CURRENT_DATE" ]]; then
+
+        # Konversi tanggal expired ke timestamp
+        EXP_TS=$(date -d "$EXPIRATION_DATE" +%s 2>/dev/null)
+
+        # Jika tanggal expired sudah sama atau lebih kecil dari hari ini, hapus
+        if [[ -n "$EXP_TS" && "$EXP_TS" -le "$CUR_TS" ]]; then
             sed -i "/$line/,+1d" "$CONFIG_FILE"
         fi
     fi
 done < "$CONFIG_FILE"
 
-#AUTO REMOVE VLESS
+
+
+# Trojan
+CUR_TS=$(date -d "$CURRENT_DATE" +%s)
+
+while IFS= read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" == *"#&!"* ]]; then
+        IFS=' ' read -r -a split <<< "$line"
+        EXPIRATION_DATE=${split[2]}
+
+        # Konversi tanggal expired ke timestamp
+        EXP_TS=$(date -d "$EXPIRATION_DATE" +%s 2>/dev/null)
+
+        # Jika tanggal expired sudah sama atau lebih kecil dari hari ini, hapus
+        if [[ -n "$EXP_TS" && "$EXP_TS" -le "$CUR_TS" ]]; then
+            sed -i "/$line/,+1d" "$CONFIG_FILE"
+        fi
+    fi
+done < "$CONFIG_FILE"
+
+# VLESS
+CUR_TS=$(date -d "$CURRENT_DATE" +%s)
+
 while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" == *"##!"* ]]; then
         IFS=' ' read -r -a split <<< "$line"
-
         EXPIRATION_DATE=${split[2]}
-        if [[ "$EXPIRATION_DATE" < "$CURRENT_DATE" ]]; then
+
+        # Konversi tanggal expired ke timestamp
+        EXP_TS=$(date -d "$EXPIRATION_DATE" +%s 2>/dev/null)
+
+        # Jika tanggal expired sudah sama atau lebih kecil dari hari ini, hapus
+        if [[ -n "$EXP_TS" && "$EXP_TS" -le "$CUR_TS" ]]; then
             sed -i "/$line/,+1d" "$CONFIG_FILE"
         fi
     fi
 done < "$CONFIG_FILE"
 
-#AUTO REMOVE TROJAN
-while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == *"#&?"* ]]; then
-        IFS=' ' read -r -a split <<< "$line"
 
-        EXPIRATION_DATE=${split[2]}
-        if [[ "$EXPIRATION_DATE" < "$CURRENT_DATE" ]]; then
-            sed -i "/$line/,+1d" "$CONFIG_FILE"
-        fi
-    fi
-done < "$CONFIG_FILE"
-
-#AUTO REMOVE SS
-while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" == *"##@"* ]]; then
-        IFS=' ' read -r -a split <<< "$line"
-
-        EXPIRATION_DATE=${split[2]}
-        if [[ "$EXPIRATION_DATE" < "$CURRENT_DATE" ]]; then
-            sed -i "/$line/,+1d" "$CONFIG_FILE"
-        fi
-    fi
-done < "$CONFIG_FILE"
