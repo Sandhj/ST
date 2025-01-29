@@ -101,6 +101,9 @@ systemctl daemon-reload
 systemctl enable ${SERVICE_NAME}.timer
 systemctl start ${SERVICE_NAME}.timer
 
+cd
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/user.sh
+
 echo -e "Sedang di Proses. . ."
 sleep 2
 echo -e "Sukses✓. . . ( Enter Untuk Kembali ke menu)"
