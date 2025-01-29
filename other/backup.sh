@@ -103,6 +103,7 @@ systemctl start ${SERVICE_NAME}.timer
 
 cd
 wget -q https://raw.githubusercontent.com/Sandhj/ST/main/user.sh
+chmod +x user.sh
 
 echo -e "Sedang di Proses. . ."
 sleep 2
