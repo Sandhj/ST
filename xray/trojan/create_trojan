@@ -67,28 +67,27 @@ clear
 # Menampilkan Informasi ke Pengguna
 
 TEXT="
-——————————————————————————————
-         Trojan Account
-——————————————————————————————
+————————————
 USERNAME    : $user
 EXPIRED ON  : $exp
 ISP         : $ISP
 REGION      : $REG
 PORT TLS    : 443
 PORT HTTP   : 80
-——————————————————————————————
+PASSWORD    : $pwtr
+————————————
 WS TLS      : $trojanlink1
-——————————————————————————————
+————————————
 WS nTLS     : $trojanlink2
-——————————————————————————————
+————————————
 HUP TLS     : $trojanlink3
-——————————————————————————————
+————————————
 HUP nTLS    : $trojanlink4
-——————————————————————————————
+————————————
 GRPC        : $trojanlink5
-——————————————————————————————
+————————————
 TCP         : $trojanlink6
-——————————————————————————————
+————————————
 "
-echo "$TEXT" > /root/project/${user}_output.txt
-echo -e "$TEXT"
+#echo "$TEXT" > /root/project/${user}_output.txt
+#echo -e "$TEXT"
