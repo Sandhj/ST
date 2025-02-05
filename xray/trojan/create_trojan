@@ -90,4 +90,4 @@ TCP         : $trojanlink6
 ————————————
 "
 #echo "$TEXT" > /root/project/${user}_output.txt
-#echo -e "$TEXT"
+echo -e "$TEXT"
