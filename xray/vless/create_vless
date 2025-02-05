@@ -69,28 +69,27 @@ clear
 # Menampilkan Informasi ke Pengguna
 
 TEXT="
-——————————————————————————————
-         Vless Account
-——————————————————————————————
+————————————
 USERNAME    : $user
 EXPIRED ON  : $exp
 ISP         : $ISP
 REGION      : $REG
 PORT TLS    : 443
 PORT HTTP   : 80
-——————————————————————————————
+UUID        : $uuid
+————————————
 WS TLS      : $vlesslink1
-——————————————————————————————
+————————————
 WS nTLS     : $vlesslink2
-——————————————————————————————
+————————————
 HUP TLS     : $vlesslink3
-——————————————————————————————
+————————————
 HUP nTLS    : $vlesslink4
-——————————————————————————————
+————————————
 GRPC        : $vlesslink5
-——————————————————————————————
+————————————
 XTLS        : $vlesslink6
-——————————————————————————————
+————————————
 "
 
 echo "$TEXT" > /root/project/${user}_output.txt
