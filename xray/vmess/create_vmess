@@ -105,5 +105,5 @@ HUP nTLS    : $vmesslink4
 GRPC        : $vmesslink5
 ————————————
 "
-echo "$TEXT" > /root/project/${user}_output.txt
+#echo "$TEXT" > /root/project/${user}_output.txt
 echo -e "$TEXT"
