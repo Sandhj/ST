@@ -85,7 +85,7 @@ systemctl restart xray
 
 clear
 TEXT="
-————————————
+—————————————————————
 USERNAME    : $user
 EXPIRED ON  : $exp
 ISP         : $ISP
@@ -93,17 +93,17 @@ REGION      : $REG
 PORT TLS    : 443
 PORT HTTP   : 80
 UUID        : $uuid
-————————————
+—————————————————————
 WS TLS      : $vmesslink1
-————————————
+—————————————————————
 WS nTLS     : $vmesslink2
-————————————
+—————————————————————
 HUP TLS     : $vmesslink3
-————————————
+—————————————————————
 HUP nTLS    : $vmesslink4
-————————————
+—————————————————————
 GRPC        : $vmesslink5
-————————————
+—————————————————————
 "
 #echo "$TEXT" > /root/project/${user}_output.txt
 echo -e "$TEXT"
