@@ -12,40 +12,89 @@ MB='\e[35;1m'    # Magenta Bold
 CB='\e[36;1m'    # Cyan Bold
 WB='\e[37;1m'    # White Bold
 
-get_info() {
-# Ambil informasi IP dan tanggal dari URL
-url="https://raw.githubusercontent.com/Sandhj/registrasi-ip/main/IP"
-ip_date=$(curl -s $url)
+#Verifikasi ip ------------
 
-# Ambil IP dan Tanggal dari data yang diambil
-ip=$(echo $ip_date | awk '{print $1}')
-date=$(echo $ip_date | awk '{print $2}')
+status_ip() {
+    # URL file daftar IP di GitHub
+    url="https://raw.githubusercontent.com/Sandhj/registrasi-ip/main/IP?$(date +%s)"
+    
+    # Ambil IP VPS saat ini
+    current_ip=$(curl -s https://ipinfo.io/ip)
+    # Ambil tanggal hari ini dengan format YYYY-MM-DD
+    current_date=$(date +%Y-%m-%d)
+    # Konversi tanggal hari ini ke detik (epoch) untuk perhitungan
+    current_date_sec=$(date -d "$current_date" +%s)
+    
+    # Inisialisasi variabel untuk menyimpan status pencarian
+    found=false
+    expiry_date=""
+    
+    # Ambil setiap baris dari file daftar IP
+    while IFS=' ' read -r ip exp_date; do
+        # Abaikan baris kosong atau baris komentar
+        [[ -z "$ip" ]] && continue
+        [[ "$ip" =~ ^# ]] && continue
 
-# Ambil IP dan Tanggal hari ini
-current_ip=$(curl -s https://ipinfo.io/ip)
-current_date=$(date +%Y-%m-%d)
-
-# Hitung tanggal satu hari setelah tanggal hari ini
-expiry_date=$(date -d "$date" +%Y-%m-%d)
-
-# Hitung sisa hari hingga kedaluwarsa
-remaining_days=$(( ($(date -d "$expiry_date" +%s) - $(date -d "$current_date" +%s)) / 86400 ))
-
-# Periksa apakah IP cocok dan apakah tanggal tidak kadaluarsa
-if [[ "$current_ip" == "$ip" && ( "$date" == "$current_date" || "$remaining_days" -ge 0 ) ]]; then
-    echo " SAN TUNNEL"
-else
-    echo "————————————————————————————————————"
-    echo "           ${RB}Eror Massage !! ${NC} "
-    echo "————————————————————————————————————"
-    echo "${GB}     IP Anda Belum Terdaftar/Expired Untuk"
-    echo "   Menggunakan Script ini Silahkan "
-    echo "            Registrasi ke ${NC}          "
-    echo "  Tele : Sanmaxx | Wa : 085155208019"
-    echo "————————————————————————————————————"
-    exit 1
-fi
+        # Jika IP cocok, simpan tanggal kedaluwarsa dan tandai sebagai ditemukan
+        if [ "$current_ip" = "$ip" ]; then
+            expiry_date="$exp_date"
+            found=true
+            break
+        fi
+    done < <(curl -s "$url")
+    
+    # Jika IP tidak ditemukan
+    if ! $found; then
+        echo "——————————————————————————————"
+        echo "                Eror Massage !! "
+        echo "——————————————————————————————"
+        echo "     IP Anda Belum Terdaftar/Expired Untuk"
+        echo "        Menggunakan Script ini Silahkan "
+        echo "                Registrasi ke "
+        echo "     Tele : Sanmaxx | Wa : 085155208019"
+        echo "——————————————————————————————"
+        exit 1
+    fi
+    
+    # Konversi tanggal kedaluwarsa ke detik
+    expiry_date_sec=$(date -d "$expiry_date" +%s 2>/dev/null)
+    if [ $? -ne 0 ]; then
+        echo "Format tanggal tidak valid untuk IP $current_ip: $expiry_date"
+        exit 1
+    fi
+    
+    # Hitung selisih detik antara tanggal kedaluwarsa dan tanggal hari ini
+    diff_sec=$(( expiry_date_sec - current_date_sec ))
+    # Hitung sisa hari (1 hari = 86400 detik)
+    remaining_days=$(( diff_sec / 86400 ))
+    
+    # Jika sisa hari negatif, maka sudah expired
+    if [ $remaining_days -ge 0 ]; then
+        status="Active"
+    else
+        status="Expired"
+        remaining_days=0
+    fi
+    
+    # Jika status expired, tampilkan pesan error dan hentikan eksekusi
+    if [ "$status" == "Expired" ]; then
+        echo "————————————————————————————————————"
+        echo "           ${RB}Eror Massage !! ${NC}"
+        echo "————————————————————————————————————"
+        echo "${GB}     IP Anda Belum Terdaftar/Expired Untuk"
+        echo "   Menggunakan Script ini Silahkan "
+        echo "            Registrasi ke ${NC}"
+        echo "  Tele : Sanmaxx | Wa : 085155208019"
+        echo "————————————————————————————————————"
+        exit 1
+    else
+        # Jika status aktif, tampilkan informasi status IP
+        echo "Status     : $status"
+        echo "Expired on : $expiry_date"
+        echo "Remaining  : $remaining_days hari"
+    fi
 }
+
 
 #Periksa apakah User Adalah Admin
 # Path file yang akan dicek
@@ -55,7 +104,7 @@ file_path="/usr/local/etc/xray/admin"
 if [ -f "$file_path" ]; then
     Admin="∞"
 else
-    get_info
+    status_ip
 fi
 
 config_file="/usr/local/etc/xray/config/04_inbounds.json"
@@ -104,8 +153,9 @@ LAYOUT="
     2. ${CB}Vless Menu${NC}    5. ${CB}Bot Menu${NC}
     3. ${CB}Trojan Menu${NC}   6. ${CB}Other Menu${NC}
   ${BB}————————————————————————————————${NC}
-        Expired : ${GB}$expiry_date $Admin ${NC}
-        Sisa Hari: ${GB}$remaining_days$Admin ${NC}
+        Status     : ${GB}$status${NC}
+        Expired    : ${GB}$expiry_date $Admin ${NC}
+        Sisa Hari   : ${GB}$remaining_days$Admin ${NC}
   ${BB}————————————————————————————————${NC}
        ${MB}Autoscript Mod By San${NC}
     ${GB} [ $uptime_info ]${NC}
