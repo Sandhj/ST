@@ -125,7 +125,8 @@ main_script &
 loading_bar $!
 
 cd
-wget -q ${HOSTING}/user.sh
+wget -q https://raw.githubusercontent.com/Sandhj/ST/refs/heads/main/user.sh
+chmod +x user.sh
 
 echo -e "${GB}Update Selesai✓${NC}"
 
