@@ -86,6 +86,10 @@ status_ip() {
         echo "            Registrasi ke ${NC}"
         echo "  Tele : Sanmaxx | Wa : 085155208019"
         echo "————————————————————————————————————"
+
+        rm /usr/bin/ create_trojan
+        rm /usr/bin/ create_vless
+        rm /usr/bin/ create_vmess
         exit 1
     else
         # Jika status aktif, tampilkan informasi status IP
