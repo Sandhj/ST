@@ -26,7 +26,7 @@ Script ini telah diuji dan mendukung sistem operasi berikut:
 1. Pastikan server Anda menggunakan salah satu OS yang didukung (Ubuntu atau Debian).
 2. Jalankan perintah berikut untuk memulai instalasi:
 ```
-wget -q https://raw.githubusercontent.com/Sandhj/ST/main/install.sh.x && chmod +x install.sh.x && ./install.sh.x
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/install.sh && chmod +x install.sh && ./install.sh
 ```
 
 ## For Registrasi 
