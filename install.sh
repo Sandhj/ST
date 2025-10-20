@@ -1,89 +1,32 @@
 #!/bin/bash
 
-clear
-# Warna untuk output (sesuaikan dengan kebutuhan)
-NC='\e[0m'       # No Color (mengatur ulang warna teks ke default)
-RB='\e[31;1m'    # Red Bold
-GB='\e[32;1m'    # Green Bold
-YB='\e[33;1m'    # Yellow Bold
-BB='\e[34;1m'    # Blue Bold
-MB='\e[35;1m'    # Magenta Bold
-CB='\e[36;1m'    # Cyan Bold
-WB='\e[37;1m'    # White Bold
-
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
-# Fungsi untuk mencetak pesan dengan warna
-print_msg() {
-    COLOR=$1
-    MSG=$2
-    echo -e "${COLOR}${MSG}${NC}"
-}
-
-# Fungsi untuk memeriksa keberhasilan perintah
-check_success() {
-    if [ $? -eq 0 ]; then
-        print_msg $GB "Berhasil"
-    else
-        print_msg $RB "Gagal: $1"
-        exit 1
-    fi
-}
-
-# Fungsi untuk menampilkan pesan kesalahan
-print_error() {
-    MSG=$1
-    print_msg $RB "Error: ${MSG}"
-}
-
-# Memastikan pengguna adalah root
+# === [PERIKSA ROOT] ===
 if [ "$EUID" -ne 0 ]; then
-  print_error "Harap jalankan skrip ini sebagai root."
+  echo "Error: Harap jalankan skrip ini sebagai root."
   exit 1
 fi
 
-
-# Fungsi untuk memverifikasi IP VPS
+# === [FUNGSI VERIFIKASI IP] ===
 verif_ip() {
-    # URL file daftar IP yang tersimpan di GitHub
     url="https://raw.githubusercontent.com/Sandhj/registrasi-ip/main/IP?$(date +%s)"
-    
-    # Ambil seluruh baris dari file daftar IP dan simpan ke dalam array
     readarray -t daftar_ip < <(curl -s "$url")
-    
-    # Ambil IP VPS saat ini dan tanggal hari ini
     current_ip=$(curl -s https://ipinfo.io/ip)
     current_date=$(date +%Y-%m-%d)
-    # Konversi tanggal saat ini ke detik agar perbandingan tanggal lebih mudah
     current_date_sec=$(date -d "$current_date" +%s)
-    
-    # Inisialisasi status verifikasi
     verified=false
-    
-    # Iterasi setiap baris di file daftar IP
-    for entry in "${daftar_ip[@]}"; do
-        # Abaikan baris kosong atau baris yang diawali dengan tanda pagar (komentar)
-        [[ -z "$entry" || "$entry" =~ ^# ]] && continue
 
-        # Pisahkan IP dan tanggal kedaluwarsa berdasarkan spasi
+    for entry in "${daftar_ip[@]}"; do
+        [[ -z "$entry" || "$entry" =~ ^# ]] && continue
         IFS=' ' read -r ip expiry_date <<< "$entry"
-        
-        # Pastikan format tanggal valid dan konversikan ke detik
-        expiry_date_sec=$(date -d "$expiry_date" +%s 2>/dev/null)
-        if [ $? -ne 0 ]; then
-            echo "Format tanggal tidak valid untuk IP $ip: $expiry_date"
-            continue
-        fi
-        
-        # Jika IP cocok dan tanggal saat ini kurang dari atau sama dengan tanggal kedaluwarsa,
-        # artinya IP tersebut masih dalam masa aktif
+        expiry_date_sec=$(date -d "$expiry_date" +%s 2>/dev/null) || continue
         if [[ "$current_ip" == "$ip" && "$current_date_sec" -le "$expiry_date_sec" ]]; then
             verified=true
             break
         fi
     done
 
-    # Tampilkan pesan sesuai hasil verifikasi
     if $verified; then
         echo "————————————————————————————————————"
         echo "           Success Message !!"
@@ -105,7 +48,7 @@ verif_ip() {
 
 mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
 
-# Script untuk Verifikasi Pengguna
+# === [VERIFIKASI PENGGUNA] ===
 while true; do
     echo "Pilih tipe pengguna:"
     echo "1. Owner SC"
@@ -116,44 +59,37 @@ while true; do
         read -sp "Masukkan Password Owner: " password
         echo
         if [ "$password" == "@sandi" ]; then
-            echo -e "${GB}Selamat Datang Tuan${NC}"
+            echo "Selamat Datang Tuan"
             touch /usr/local/etc/xray/admin
             sleep 2
             break
         else
-            echo -e "Password Salah, Jika Kamu Pengguna Silahkan Memilih Opsi No.2"
+            echo "Password Salah, Jika Kamu Pengguna Silahkan Memilih Opsi No.2"
         fi
     elif [ "$pilihan" == "2" ]; then
         verif_ip
         break
     else
-        echo -e "Pilihan tidak valid. Silakan coba lagi."
+        echo "Pilihan tidak valid. Silakan coba lagi."
     fi
 done
-clear
-# ============= BATAS AWAL SCRIPT UTAMA ============
-mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
-mkdir -p /usr/local/etc/xray/dns >> /dev/null 2>&1
+
+# === [INPUT DOMAIN] ===
+mkdir -p /usr/local/etc/xray/config /usr/local/etc/xray/dns >> /dev/null 2>&1
 touch /usr/local/etc/xray/dns/domain
-# Fungsi untuk memvalidasi domain
+
 validate_domain() {
     local domain=$1
-    if [[ $domain =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ $domain =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]
 }
 
-# Fungsi untuk meminta input domain
 input_domain() {
     while true; do
-        read -rp $'\e[33;1mInput domain kamu: \e[0m' -e dns
-
+        read -rp "Input domain kamu: " -e dns
         if [ -z "$dns" ]; then
-            echo -e "${RB}Tidak ada input untuk domain!${NC}"
+            echo "Tidak ada input untuk domain!"
         elif ! validate_domain "$dns"; then
-            echo -e "${RB}Format domain tidak valid! Silakan input domain yang valid.${NC}"
+            echo "Format domain tidak valid! Silakan input domain yang valid."
         else
             echo "$dns" > /usr/local/etc/xray/dns/domain
             echo "DNS=$dns" > /var/lib/dnsvps.conf
@@ -162,93 +98,77 @@ input_domain() {
     done
 }
 
-
-
-#Fungsi Input Domain
-echo -e "${BB}————————————————————————————————————————————————————————"
-echo -e "${YB}                      SETUP DOMAIN"
-echo -e "${BB}————————————————————————————————————————————————————————"
-
+echo "————————————————————————————————————————————————————————"
+echo "                      SETUP DOMAIN"
+echo "————————————————————————————————————————————————————————"
 input_domain
 
-
-# Update package list
-print_msg $YB "Setup Domain Done"
-print_msg $YB "Install Paket Yang Dibutuhkan"
+# === [INSTAL DEPENDENSI DASAR] ===
+echo "Setup Domain Done"
+echo "Install Paket Yang Dibutuhkan"
 sleep 2
 apt update -y
-apt install socat netfilter-persistent bsdmainutils -y
-apt install vnstat lsof fail2ban -y
-apt install jq curl sudo cron -y
-apt install build-essential libpcre3 libpcre3-dev zlib1g zlib1g-dev openssl libssl-dev gcc clang llvm g++ valgrind make cmake debian-keyring debian-archive-keyring apt-transport-https systemd bind9-host gnupg2 ca-certificates lsb-release ubuntu-keyring debian-archive-keyring -y
-apt install unzip python-is-python3 python3-pip -y
+apt install -y socat netfilter-persistent bsdmainutils vnstat lsof fail2ban jq curl sudo cron
+apt install -y build-essential libpcre3 libpcre3-dev zlib1g zlib1g-dev openssl libssl-dev \
+               gcc clang llvm g++ valgrind make cmake debian-keyring debian-archive-keyring \
+               apt-transport-https systemd bind9-host gnupg2 ca-certificates lsb-release \
+               ubuntu-keyring unzip python-is-python3 python3-pip
+
 pip install psutil pandas tabulate rich py-cpuinfo distro requests pycountry geoip2 --break-system-packages
 
+# === [BUAT DIREKTORI & HAPUS KONFIG LAMA] ===
+echo "Membuat direktori yang diperlukan..."
+mkdir -p /user /tmp /usr/local/etc/xray /var/log/xray
+rm -f /usr/local/etc/xray/city /usr/local/etc/xray/org /usr/local/etc/xray/timezone /usr/local/etc/xray/region
 
-# Membuat direktori yang diperlukan
-print_msg $YB "Membuat direktori yang diperlukan..."
-sudo mkdir -p /user /tmp /usr/local/etc/xray /var/log/xray
-check_success "Gagal membuat direktori."
-
-# Menghapus file konfigurasi lama jika ada
-print_msg $YB "Menghapus file konfigurasi lama..."
-sudo rm -f /usr/local/etc/xray/city /usr/local/etc/xray/org /usr/local/etc/xray/timezone /usr/local/etc/xray/region
-check_success "Gagal menghapus file konfigurasi lama."
-
-# Fungsi untuk mendeteksi OS dan distribusi
+# === [DETEKSI OS] ===
 detect_os() {
     if [ -f /etc/os-release ]; then
         . /etc/os-release
         OS=$NAME
         VERSION=$VERSION_ID
     else
-        print_msg $RB "Tidak dapat mendeteksi OS. Skrip ini hanya mendukung distribusi berbasis Debian dan Red Hat."
+        echo "Tidak dapat mendeteksi OS. Skrip ini hanya mendukung distribusi berbasis Debian dan Red Hat."
         exit 1
     fi
 }
 
-# Fungsi untuk memeriksa versi terbaru Xray-core
+detect_os
+
+if [[ "$OS" != "Ubuntu" && "$OS" != "Debian" && "$OS" != "Debian GNU/Linux" && \
+      "$OS" != "CentOS" && "$OS" != "Fedora" && "$OS" != "Red Hat Enterprise Linux" ]]; then
+    echo "Distribusi $OS tidak didukung oleh skrip ini. Proses instalasi dibatalkan."
+    exit 1
+fi
+
+echo "Mendeteksi OS: $OS $VERSION"
+
+# === [INSTAL XRAY-CORE] ===
 get_latest_xray_version() {
     LATEST_VERSION=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | jq -r '.tag_name')
     if [ -z "$LATEST_VERSION" ]; then
-        print_msg $RB "Tidak dapat menemukan versi terbaru Xray-core."
+        echo "Tidak dapat menemukan versi terbaru Xray-core."
         exit 1
     fi
 }
 
-# Fungsi untuk memasang Xray-core
 install_xray_core() {
     ARCH=$(uname -m)
     case $ARCH in
-        x86_64)
-            ARCH="64"
-            ;;
-        aarch64)
-            ARCH="arm64-v8a"
-            ;;
-        *)
-            print_msg $RB "Arsitektur $ARCH tidak didukung."
-            exit 1
-            ;;
+        x86_64) ARCH="64" ;;
+        aarch64) ARCH="arm64-v8a" ;;
+        *) echo "Arsitektur $ARCH tidak didukung."; exit 1 ;;
     esac
 
     DOWNLOAD_URL="https://github.com/XTLS/Xray-core/releases/download/$LATEST_VERSION/Xray-linux-$ARCH.zip"
 
-    # Unduh dan ekstrak Xray-core
-    print_msg $YB "Mengunduh dan memasang Xray-core..."
-    curl -L -o xray.zip $DOWNLOAD_URL
-    check_success "Gagal mengunduh Xray-core."
-
-    sudo unzip -o xray.zip -d /usr/local/bin
-    check_success "Gagal mengekstrak Xray-core."
+    echo "Mengunduh dan memasang Xray-core..."
+    curl -L -o xray.zip "$DOWNLOAD_URL"
+    unzip -o xray.zip -d /usr/local/bin
     rm xray.zip
+    chmod +x /usr/local/bin/xray
 
-    sudo chmod +x /usr/local/bin/xray
-    check_success "Gagal mengatur izin eksekusi untuk Xray-core."
-
-    # Membuat layanan systemd
-    print_msg $YB "Mengkonfigurasi layanan systemd untuk Xray-core..."
-    sudo bash -c 'cat <<EOF > /etc/systemd/system/xray.service
+    cat > /etc/systemd/system/xray.service <<EOF
 [Unit]
 Description=Xray Service
 Documentation=https://github.com/xtls
@@ -271,72 +191,51 @@ OOMScoreAdjust=100
 
 [Install]
 WantedBy=multi-user.target
-EOF'
-    check_success "Gagal mengkonfigurasi layanan systemd untuk Xray-core."
+EOF
 
-    sudo systemctl daemon-reload
-    sudo systemctl enable xray
-    sudo systemctl start xray
-    check_success "Gagal memulai layanan Xray-core."
+    systemctl daemon-reload
+    systemctl enable xray
+    systemctl start xray
 }
 
-# Deteksi OS
-print_msg $YB "Mendeteksi sistem operasi..."
-detect_os
-
-# Cek apakah OS didukung
-if [[ "$OS" == "Ubuntu" || "$OS" == "Debian" || "$OS" == "Debian GNU/Linux" || "$OS" == "CentOS" || "$OS" == "Fedora" || "$OS" == "Red Hat Enterprise Linux" ]]; then
-    print_msg $GB "Mendeteksi OS: $OS $VERSION"
-else
-    print_msg $RB "Distribusi $OS tidak didukung oleh skrip ini. Proses instalasi dibatalkan."
-    exit 1
-fi
-
-# Memeriksa versi terbaru Xray-core
-print_msg $YB "Memeriksa versi terbaru Xray-core..."
+echo "Memeriksa versi terbaru Xray-core..."
 get_latest_xray_version
-print_msg $GB "Versi terbaru Xray-core: $LATEST_VERSION"
+echo "Versi terbaru Xray-core: $LATEST_VERSION"
 
-# Memasang dependensi yang diperlukan
-print_msg $YB "Memasang dependensi yang diperlukan..."
+echo "Memasang dependensi yang diperlukan..."
 if [[ "$OS" == "Ubuntu" || "$OS" == "Debian" ]]; then
-    sudo apt update
-    sudo apt install -y curl unzip
+    apt install -y curl unzip
 elif [[ "$OS" == "CentOS" || "$OS" == "Fedora" || "$OS" == "Red Hat Enterprise Linux" ]]; then
-    sudo yum install -y curl unzip
+    yum install -y curl unzip
 fi
-check_success "Gagal memasang dependensi yang diperlukan."
 
-# Memasang Xray-core
 install_xray_core
+echo "Pemasangan Xray-core versi $LATEST_VERSION selesai."
 
-print_msg $GB "Pemasangan Xray-core versi $LATEST_VERSION selesai."
+# === [AMBIL INFO LOKASI] ===
+echo "Mengumpulkan informasi lokasi dari ipinfo.io..."
+curl -s ipinfo.io/city?token=f209571547ff6b > /usr/local/etc/xray/city
+curl -s ipinfo.io/org?token=f209571547ff6b | cut -d " " -f 2-10 > /usr/local/etc/xray/org
+curl -s ipinfo.io/timezone?token=f209571547ff6b > /usr/local/etc/xray/timezone
+curl -s ipinfo.io/region?token=f209571547ff6b > /usr/local/etc/xray/region
 
-# Mengumpulkan informasi dari ipinfo.io
-print_msg $YB "Mengumpulkan informasi lokasi dari ipinfo.io..."
-curl -s ipinfo.io/city?token=f209571547ff6b | sudo tee /usr/local/etc/xray/city
-curl -s ipinfo.io/org?token=f209571547ff6b | cut -d " " -f 2-10 | sudo tee /usr/local/etc/xray/org
-curl -s ipinfo.io/timezone?token=f209571547ff6b | sudo tee /usr/local/etc/xray/timezone
-curl -s ipinfo.io/region?token=f209571547ff6b | sudo tee /usr/local/etc/xray/region
-check_success "Gagal mengumpulkan informasi lokasi."
+# === [INSTAL SPEEDTEST CLI] ===
+echo "Mengunduh dan menginstal Speedtest CLI..."
+curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | bash &>/dev/null
+apt-get install -y speedtest &>/dev/null
+echo "Speedtest CLI berhasil diinstal."
 
-# Mengunduh dan menginstal Speedtest CLI
-print_msg $YB "Mengunduh dan menginstal Speedtest CLI..."
-curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash &>/dev/null
-sudo apt-get install -y speedtest &>/dev/null
-print_msg $YB "Speedtest CLI berhasil diinstal."
+# === [SET ZONA WAKTU] ===
+echo "Mengatur zona waktu ke Asia/Jakarta..."
+timedatectl set-timezone Asia/Jakarta &>/dev/null
+echo "Zona waktu berhasil diatur."
 
-# Mengatur zona waktu ke Asia/Jakarta
-print_msg $YB "Mengatur zona waktu ke Asia/Jakarta..."
-sudo timedatectl set-timezone Asia/Jakarta &>/dev/null
-print_msg $YB "Zona waktu berhasil diatur."
-
-print_msg $YB "Instalasi WireProxy"
-rm -rf /usr/local/bin/wireproxy >> /dev/null 2>&1
-wget -O /usr/local/bin/wireproxy ${HOSTING}/wireproxy
+# === [INSTAL WIREPROXY] ===
+echo "Instalasi WireProxy"
+rm -rf /usr/local/bin/wireproxy
+wget -O /usr/local/bin/wireproxy "${HOSTING}/wireproxy"
 chmod +x /usr/local/bin/wireproxy
-check_success "Gagal instalasi WireProxy."
-print_msg $YB "Mengkonfigurasi WireProxy"
+
 cat > /etc/wireproxy.conf << END
 [Interface]
 PrivateKey = 4Osd07VYMrPGDtrJfRaRZ+ynuscBVi4PjzOZmLUJDlE=
@@ -353,9 +252,7 @@ Endpoint = engage.cloudflareclient.com:2408
 [Socks5]
 BindAddress = 127.0.0.1:40000
 END
-check_success "Gagal mengkonfigurasi WireProxy."
 
-print_msg $YB "Membuat service untuk WireProxy"
 cat > /etc/systemd/system/wireproxy.service << END
 [Unit]
 Description=WireProxy for WARP
@@ -369,110 +266,92 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 END
-check_success "Gagal membuat service untuk WireProxy."
-sudo systemctl daemon-reload
-sudo systemctl enable wireproxy
-sudo systemctl start wireproxy
-sudo systemctl restart wireproxy
-print_msg $YB "Instalasi selesai."
-sleep 3
-clear
 
-# Fungsi untuk mendeteksi OS
-detect_os() {
-  if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    OS=$ID
-    VERSION=$VERSION_ID
-  else
-    print_error "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
-    exit 1
-  fi
+systemctl daemon-reload
+systemctl enable wireproxy
+systemctl start wireproxy
+systemctl restart wireproxy
+echo "Instalasi WireProxy selesai."
+
+# === [INSTAL NGINX] ===
+detect_os_for_nginx() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$ID
+    else
+        echo "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
+        exit 1
+    fi
 }
 
-# Fungsi untuk menambahkan repositori Nginx
 add_nginx_repo() {
-  if [ "$OS" == "ubuntu" ]; then
-    sudo apt install curl gnupg2 ca-certificates lsb-release ubuntu-keyring -y
-    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-  elif [ "$OS" == "debian" ]; then
-    sudo apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring -y
-    echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/debian `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-  else
-    print_error "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
-    exit 1
-  fi
+    if [ "$OS" == "ubuntu" ]; then
+        apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
+        echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" > /etc/apt/sources.list.d/nginx.list
+        curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /usr/share/keyrings/nginx-archive-keyring.gpg
+    elif [ "$OS" == "debian" ]; then
+        apt install -y curl gnupg2 ca-certificates lsb-release debian-archive-keyring
+        echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" > /etc/apt/sources.list.d/nginx.list
+        curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --dearmor > /usr/share/keyrings/nginx-archive-keyring.gpg
+    else
+        echo "OS tidak didukung. Hanya mendukung Ubuntu dan Debian."
+        exit 1
+    fi
 }
 
-# Fungsi untuk menginstal Nginx
 install_nginx() {
-  sudo apt update
-  sudo apt install nginx -y
-  sudo systemctl start nginx
-  sudo systemctl enable nginx
+    apt update
+    apt install -y nginx
+    systemctl start nginx
+    systemctl enable nginx
 }
 
-# Fungsi utama
-detect_os
+detect_os_for_nginx
 add_nginx_repo
 install_nginx
 
-
-# Menghapus konfigurasi default Nginx dan konten default web
-print_msg $YB "Menghapus konfigurasi default Nginx dan konten default web..."
-rm -rf /etc/nginx/conf.d/default.conf >> /dev/null 2>&1
-rm -rf /etc/nginx/sites-enabled/default >> /dev/null 2>&1
-rm -rf /etc/nginx/sites-available/default >> /dev/null 2>&1
-rm -rf /var/www/html/* >> /dev/null 2>&1
-sudo systemctl restart nginx
-check_success "Gagal menghapus konfigurasi default Nginx dan konten default web."
-
-# Membuat direktori untuk Xray
-print_msg $YB "Membuat direktori untuk Xray di /var/www/html..."
-mkdir -p /var/www/html/xray >> /dev/null 2>&1
-check_success "Gagal membuat direktori untuk Xray."
-
-# Pesan selesai
-print_msg $GB "Pemasangan dan konfigurasi Nginx telah selesai."
-sleep 3
-clear
+# Hapus konfigurasi default Nginx
+rm -rf /etc/nginx/conf.d/default.conf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default /var/www/html/*
 systemctl restart nginx
+
+mkdir -p /var/www/html/xray
+echo "Pemasangan dan konfigurasi Nginx telah selesai."
+
+# === [SERTIFIKAT SSL DENGAN ACME.SH] ===
 systemctl stop nginx
 systemctl stop xray
 
-#Cert Domain
 install_acme_sh2() {
     domain=$(cat /usr/local/etc/xray/dns/domain)
-    rm -rf ~/.acme.sh/*_ecc >> /dev/null 2>&1
+    rm -rf ~/.acme.sh/*_ecc
     curl https://get.acme.sh | sh
     source ~/.bashrc
-    ~/.acme.sh/acme.sh --register-account -m $(echo $RANDOM | md5sum | head -c 6; echo;)@gmail.com --server letsencrypt
-    ~/.acme.sh/acme.sh --issue -d $domain --standalone --listen-v6 --server letsencrypt --keylength ec-256 --fullchain-file /usr/local/etc/xray/fullchain.cer --key-file /usr/local/etc/xray/private.key --reloadcmd "systemctl restart nginx" --force
+    ~/.acme.sh/acme.sh --register-account -m "$(echo $RANDOM | md5sum | head -c 6; echo;)@gmail.com" --server letsencrypt
+    ~/.acme.sh/acme.sh --issue -d "$domain" --standalone --listen-v6 --server letsencrypt --keylength ec-256 \
+        --fullchain-file /usr/local/etc/xray/fullchain.cer --key-file /usr/local/etc/xray/private.key \
+        --reloadcmd "systemctl restart nginx" --force
     chmod 745 /usr/local/etc/xray/private.key
-    echo -e "${YB}Sertifikat SSL berhasil dipasang!${NC}"
+    echo "Sertifikat SSL berhasil dipasang!"
 }
 
 install_acme_sh2
 
-echo -e "${GB}[ INFO ]${NC} ${YB}Setup Nginx & Xray Config${NC}"
-# Generate variabel
+# === [KONFIGURASI XRAY & NGINX] ===
+echo "[ INFO ] Setup Nginx & Xray Config"
+
 uuid=$(cat /proc/sys/kernel/random/uuid)
 pwtr=$(openssl rand -hex 4)
 pwss=$(echo $RANDOM | md5sum | head -c 6; echo;)
 userpsk=$(openssl rand -base64 32)
 serverpsk=$(openssl rand -base64 32)
 
-# Escape karakter khusus dalam variabel
 escaped_uuid=$(printf '%s\n' "$uuid" | sed 's/[\/&]/\\&/g')
 escaped_pwtr=$(printf '%s\n' "$pwtr" | sed 's/[\/&]/\\&/g')
 escaped_pwss=$(printf '%s\n' "$pwss" | sed 's/[\/&]/\\&/g')
 escaped_userpsk=$(printf '%s\n' "$userpsk" | sed 's/[\/&]/\\&/g')
 escaped_serverpsk=$(printf '%s\n' "$serverpsk" | sed 's/[\/&]/\\&/g')
 
-# Konfigurasi Xray-core
-print_msg $YB "Mengonfigurasi Xray-core..."
+# Unduh konfigurasi Xray
 wget -q -O /usr/local/etc/xray/config/00_log.json "${HOSTING}/config/00_log.json"
 wget -q -O /usr/local/etc/xray/config/01_api.json "${HOSTING}/config/01_api.json"
 wget -q -O /usr/local/etc/xray/config/02_dns.json "${HOSTING}/config/02_dns.json"
@@ -482,7 +361,6 @@ wget -q -O /usr/local/etc/xray/config/05_outbonds.json "${HOSTING}/config/05_out
 wget -q -O /usr/local/etc/xray/config/06_routing.json "${HOSTING}/config/06_routing.json"
 wget -q -O /usr/local/etc/xray/config/07_stats.json "${HOSTING}/config/07_stats.json"
 
-# Ganti placeholder di dalam 04_inbounds JSON 
 sed -i \
     -e "s/UUID/$escaped_uuid/g" \
     -e "s/PWTR/$escaped_pwtr/g" \
@@ -490,95 +368,58 @@ sed -i \
     -e "s/USERPSK/$escaped_userpsk/g" \
     -e "s/SERVERPSK/$escaped_serverpsk/g" \
     /usr/local/etc/xray/config/04_inbounds.json
-sleep 1.5
 
-# Membuat file log Xray yang diperlukan
-print_msg $YB "Membuat file log Xray yang diperlukan..."
-sudo touch /var/log/xray/access.log /var/log/xray/error.log
-sudo chown nobody:nogroup /var/log/xray/access.log /var/log/xray/error.log
-sudo chmod 664 /var/log/xray/access.log /var/log/xray/error.log
-check_success "Gagal membuat file log Xray yang diperlukan."
-sleep 1.5
+# Buat file log
+touch /var/log/xray/access.log /var/log/xray/error.log
+chown nobody:nogroup /var/log/xray/access.log /var/log/xray/error.log
+chmod 664 /var/log/xray/access.log /var/log/xray/error.log
 
 # Konfigurasi Nginx
-print_msg $YB "Mengonfigurasi Nginx..."
-wget -q -O /var/www/html/index.html ${HOSTING}/index.html
-wget -q -O /etc/nginx/nginx.conf ${HOSTING}/nginx.conf
+wget -q -O /var/www/html/index.html "${HOSTING}/index.html"
+wget -q -O /etc/nginx/nginx.conf "${HOSTING}/nginx.conf"
 domain=$(cat /usr/local/etc/xray/dns/domain)
 sed -i "s/server_name web.com;/server_name $domain;/g" /etc/nginx/nginx.conf
-sed -i "s/server_name \*.web.com;/server_name \*.$domain;/" /etc/nginx/nginx.conf
-# Jika sampai di sini tidak ada error, maka konfigurasi berhasil
-print_msg $GB "Konfigurasi Xray-core dan Nginx berhasil."
-sleep 3
+sed -i "s/server_name \*.web.com;/server_name \*.$domain;/g" /etc/nginx/nginx.conf
+
 systemctl restart nginx
 systemctl restart xray
-echo -e "${GB}[ INFO ]${NC} ${YB}Setup Done${NC}"
-sleep 3
-clear
+echo "[ INFO ] Setup Done"
 
-# Blokir lalu lintas torrent (BitTorrent)
-sudo iptables -A INPUT -p udp --dport 6881:6889 -j DROP
-sudo iptables -A INPUT -p tcp --dport 6881:6889 -j DROP
-# Blokir lalu lintas torrent dengan modul string
-sudo iptables -A INPUT -p tcp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
-sudo iptables -A INPUT -p udp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
+# === [BLOKIR TRAFFIC TORRENT] ===
+iptables -A INPUT -p udp --dport 6881:6889 -j DROP
+iptables -A INPUT -p tcp --dport 6881:6889 -j DROP
+iptables -A INPUT -p tcp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
+iptables -A INPUT -p udp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
 
-print_msg $YB "MEMASANG MENU. . ."
+# === [INSTAL MENU] ===
+echo "MEMASANG MENU..."
 cd
 mkdir -p /root/san
 cd /root/san
-wget -q ${HOSTING}/menu/menu
-wget -q ${HOSTING}/menu/settingmenu
-wget -q ${HOSTING}/menu/sodosokmenu
-wget -q ${HOSTING}/menu/trojanmenu
-wget -q ${HOSTING}/menu/vlessmenu
-wget -q ${HOSTING}/menu/vmessmenu
-wget -q ${HOSTING}/menu/update
 
-wget -q ${HOSTING}/other/about
-wget -q ${HOSTING}/other/cek-xray
-wget -q ${HOSTING}/other/certxray
-wget -q ${HOSTING}/other/clear-log
-wget -q ${HOSTING}/other/dns
-wget -q ${HOSTING}/other/log-xray
-wget -q ${HOSTING}/other/route-xray
-wget -q ${HOSTING}/other/update-xray
-wget -q ${HOSTING}/other/xp2
+# Daftar file menu
+files=(
+  menu/settingmenu menu/sodosokmenu menu/trojanmenu menu/vlessmenu menu/vmessmenu menu/update
+  other/about other/cek-xray other/certxray other/clear-log other/dns other/log-xray
+  other/route-xray other/update-xray other/xp2
+  xray/ss/create_ss xray/ss/delete_ss xray/ss/renew_ss xray/ss/list_ss
+  xray/trojan/create_trojan xray/trojan/delete_trojan xray/trojan/renew_trojan xray/trojan/list_trojan xray/trojan/trojan_custom
+  xray/vless/create_vless xray/vless/delete_vless xray/vless/renew_vless xray/vless/list_vless xray/vless/vless_custom
+  xray/vmess/create_vmess xray/vmess/delete_vmess xray/vmess/renew_vmess xray/vmess/list_vmess xray/vmess/vmess_custom
+  traffic.py
+)
 
-wget -q ${HOSTING}/xray/ss/create_ss
-wget -q ${HOSTING}/xray/ss/delete_ss
-wget -q ${HOSTING}/xray/ss/renew_ss
-wget -q ${HOSTING}/xray/ss/list_ss
+for f in "${files[@]}"; do
+    wget -q "${HOSTING}/$f"
+done
 
-wget -q ${HOSTING}/xray/trojan/create_trojan
-wget -q ${HOSTING}/xray/trojan/delete_trojan
-wget -q ${HOSTING}/xray/trojan/renew_trojan
-wget -q ${HOSTING}/xray/trojan/list_trojan
-wget -q ${HOSTING}/xray/trojan/trojan_custom
-
-wget -q ${HOSTING}/xray/vless/create_vless
-wget -q ${HOSTING}/xray/vless/delete_vless
-wget -q ${HOSTING}/xray/vless/renew_vless
-wget -q ${HOSTING}/xray/vless/list_vless
-wget -q ${HOSTING}/xray/vless/vless_custom
-
-wget -q ${HOSTING}/xray/vmess/create_vmess
-wget -q ${HOSTING}/xray/vmess/delete_vmess
-wget -q ${HOSTING}/xray/vmess/renew_vmess
-wget -q ${HOSTING}/xray/vmess/list_vmess
-wget -q ${HOSTING}/xray/vmess/vmess_custom
-
-wget -q ${HOSTING}/traffic.py
-
-#Berikan Izin Eksekusi dan memindahkan ke /usr/bin
-cd
 chmod +x /root/san/*
 mv /root/san/* /usr/bin/
 
-menu_default() {
-    cat >/root/.profile <<EOF
+# Set menu default saat login
+cat >/root/.profile <<EOF
 # ~/.profile: executed by Bourne-compatible login shells.
-if [ "$BASH" ]; then
+if [ "\$BASH" ]; then
     if [ -f ~/.bashrc ]; then
         . ~/.bashrc
     fi
@@ -586,21 +427,17 @@ fi
 mesg n || true
 menu
 EOF
-}
 
-#Pasang Default Menu Ketika Login VPS
-menu_default
-
-#Pasang Web Restore
-print_msg $YB "MEMASANG WEB RESTORE. . ."
+# === [WEB RESTORE] ===
+echo "MEMASANG WEB RESTORE..."
 bash -c "$(wget -qO- https://raw.githubusercontent.com/Sandhj/Web-restore/main/setup.sh)"
 
-cd
+# === [CRON & AUTO EXPIRE] ===
 echo "0 5 * * * /sbin/reboot" >> /etc/crontab
 systemctl restart cron
 
-# Pasang System xp
-echo "[Unit]
+cat > /etc/systemd/system/xp2.service <<EOF
+[Unit]
 Description=Auto Remove Expired VMESS Users
 After=network.target
 
@@ -609,9 +446,11 @@ ExecStart=/usr/bin/bash /usr/bin/xp2
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" | sudo tee /etc/systemd/system/xp2.service
+WantedBy=multi-user.target
+EOF
 
-echo "[Unit]
+cat > /etc/systemd/system/xp2.timer <<EOF
+[Unit]
 Description=Run xp2 script daily at midnight
 
 [Timer]
@@ -619,50 +458,48 @@ OnCalendar=*-*-* 00:00:00
 Persistent=true
 
 [Install]
-WantedBy=timers.target" | sudo tee /etc/systemd/system/xp2.timer
+WantedBy=timers.target
+EOF
 
-# Reload systemd untuk mengenali service baru
-sudo systemctl daemon-reload
+systemctl daemon-reload
+systemctl enable xp2.timer
+systemctl start xp2.timer
 
-# Aktifkan timer agar berjalan otomatis setiap hari pukul 00:00
-sudo systemctl enable xp2.timer
-sudo systemctl start xp2.timer
-
-
-
+# === [TAMPILAN AKHIR] ===
 clear
 echo ""
-echo -e "${BB}—————————————————————————————————————————————————————————${NC}"
-echo -e "                 ${WB}»»» Protocol Service «««${NC}  "
-echo -e "${BB}—————————————————————————————————————————————————————————${NC}"
-echo -e "${YB}Vmess Websocket${NC}     : ${YB}443 & 80${NC}"
-echo -e "${YB}Vmess HTTPupgrade${NC}   : ${YB}443 & 80${NC}"
-echo -e "${YB}Vmess gRPC${NC}          : ${YB}443${NC}"
+echo "—————————————————————————————————————————————————————————"
+echo "                 »»» Protocol Service «««"
+echo "—————————————————————————————————————————————————————————"
+echo "Vmess Websocket     : 443 & 80"
+echo "Vmess HTTPupgrade   : 443 & 80"
+echo "Vmess gRPC          : 443"
 echo ""
-echo -e "${YB}Vless XTLS-Vision${NC}   : ${YB}443${NC}"
-echo -e "${YB}Vless Websocket${NC}     : ${YB}443 & 80${NC}"
-echo -e "${YB}Vless HTTPupgrade${NC}   : ${YB}443 & 80${NC}"
-echo -e "${YB}Vless gRPC${NC}          : ${YB}443${NC}"
+echo "Vless XTLS-Vision   : 443"
+echo "Vless Websocket     : 443 & 80"
+echo "Vless HTTPupgrade   : 443 & 80"
+echo "Vless gRPC          : 443"
 echo ""
-echo -e "${YB}Trojan TCP TLS${NC}      : ${YB}443${NC}"
-echo -e "${YB}Trojan Websocket${NC}    : ${YB}443 & 80${NC}"
-echo -e "${YB}Trojan HTTPupgrade${NC}  : ${YB}443 & 80${NC}"
-echo -e "${YB}Trojan gRPC${NC}         : ${YB}443${NC}"
+echo "Trojan TCP TLS      : 443"
+echo "Trojan Websocket    : 443 & 80"
+echo "Trojan HTTPupgrade  : 443 & 80"
+echo "Trojan gRPC         : 443"
 echo ""
-echo -e "${YB}SS Websocket${NC}        : ${YB}443 & 80${NC}"
-echo -e "${YB}SS HTTPupgrade${NC}      : ${YB}443 & 80${NC}"
-echo -e "${YB}SS gRPC${NC}             : ${YB}443${NC}"
+echo "SS Websocket        : 443 & 80"
+echo "SS HTTPupgrade      : 443 & 80"
+echo "SS gRPC             : 443"
 echo ""
-echo -e "${YB}SS 2022 Websocket${NC}   : ${YB}443 & 80${NC}"
-echo -e "${YB}SS 2022 HTTPupgrade${NC} : ${YB}443 & 80${NC}"
-echo -e "${YB}SS 2022 gRPC${NC}        : ${YB}443${NC}"
-echo -e "${BB}————————————————————————————————————————————————————————${NC}"
+echo "SS 2022 Websocket   : 443 & 80"
+echo "SS 2022 HTTPupgrade : 443 & 80"
+echo "SS 2022 gRPC        : 443"
+echo "————————————————————————————————————————————————————————"
 echo ""
+
 rm -f install.sh
-echo -e "${YB}[ WARNING ] reboot now ? (Y/N)${NC} "
-read answer
-if [ "$answer" == "${answer#[Yy]}" ] ;then
-exit 0
+
+read -p "[ WARNING ] reboot now ? (Y/N): " answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    reboot
 else
-reboot
+    exit 0
 fi
