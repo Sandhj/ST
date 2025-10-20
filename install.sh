@@ -392,26 +392,52 @@ iptables -A INPUT -p tcp --dport 6881:6889 -m string --algo bm --string "BitTorr
 iptables -A INPUT -p udp --dport 6881:6889 -m string --algo bm --string "BitTorrent" -j DROP
 
 # === [INSTAL MENU] ===
-echo "MEMASANG MENU..."
+# Daftar file menu
 cd
 mkdir -p /root/san
 cd /root/san
+wget -q ${HOSTING}/menu/menu
+wget -q ${HOSTING}/menu/settingmenu
+wget -q ${HOSTING}/menu/sodosokmenu
+wget -q ${HOSTING}/menu/trojanmenu
+wget -q ${HOSTING}/menu/vlessmenu
+wget -q ${HOSTING}/menu/vmessmenu
+wget -q ${HOSTING}/menu/update
 
-# Daftar file menu
-files=(
-  menu/settingmenu menu/sodosokmenu menu/trojanmenu menu/vlessmenu menu/vmessmenu menu/update
-  other/about other/cek-xray other/certxray other/clear-log other/dns other/log-xray
-  other/route-xray other/update-xray other/xp2
-  xray/ss/create_ss xray/ss/delete_ss xray/ss/renew_ss xray/ss/list_ss
-  xray/trojan/create_trojan xray/trojan/delete_trojan xray/trojan/renew_trojan xray/trojan/list_trojan xray/trojan/trojan_custom
-  xray/vless/create_vless xray/vless/delete_vless xray/vless/renew_vless xray/vless/list_vless xray/vless/vless_custom
-  xray/vmess/create_vmess xray/vmess/delete_vmess xray/vmess/renew_vmess xray/vmess/list_vmess xray/vmess/vmess_custom
-  traffic.py
-)
+wget -q ${HOSTING}/other/about
+wget -q ${HOSTING}/other/cek-xray
+wget -q ${HOSTING}/other/certxray
+wget -q ${HOSTING}/other/clear-log
+wget -q ${HOSTING}/other/dns
+wget -q ${HOSTING}/other/log-xray
+wget -q ${HOSTING}/other/route-xray
+wget -q ${HOSTING}/other/update-xray
+wget -q ${HOSTING}/other/xp2
 
-for f in "${files[@]}"; do
-    wget -q "${HOSTING}/$f"
-done
+wget -q ${HOSTING}/xray/ss/create_ss
+wget -q ${HOSTING}/xray/ss/delete_ss
+wget -q ${HOSTING}/xray/ss/renew_ss
+wget -q ${HOSTING}/xray/ss/list_ss
+
+wget -q ${HOSTING}/xray/trojan/create_trojan
+wget -q ${HOSTING}/xray/trojan/delete_trojan
+wget -q ${HOSTING}/xray/trojan/renew_trojan
+wget -q ${HOSTING}/xray/trojan/list_trojan
+wget -q ${HOSTING}/xray/trojan/trojan_custom
+
+wget -q ${HOSTING}/xray/vless/create_vless
+wget -q ${HOSTING}/xray/vless/delete_vless
+wget -q ${HOSTING}/xray/vless/renew_vless
+wget -q ${HOSTING}/xray/vless/list_vless
+wget -q ${HOSTING}/xray/vless/vless_custom
+
+wget -q ${HOSTING}/xray/vmess/create_vmess
+wget -q ${HOSTING}/xray/vmess/delete_vmess
+wget -q ${HOSTING}/xray/vmess/renew_vmess
+wget -q ${HOSTING}/xray/vmess/list_vmess
+wget -q ${HOSTING}/xray/vmess/vmess_custom
+
+wget -q ${HOSTING}/traffic.py
 
 chmod +x /root/san/*
 mv /root/san/* /usr/bin/
