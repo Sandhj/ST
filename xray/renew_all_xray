@@ -3,8 +3,7 @@
 FILE="/usr/local/etc/xray/config/04_inbounds.json"
 
 echo "——————————————————————————————————————————————"
-echo "    ATUR SEMUA AKUN (###, ##!, #&!)    "
-echo "    Gunakan angka positif (+) atau negatif (-)"
+echo " MASUKKAN JUMLAH GARANSI MASA AKTIF"
 echo "——————————————————————————————————————————————"
 
 if [[ ! -f "$FILE" ]]; then
@@ -78,6 +77,6 @@ echo ""
 process_pattern "#&!" "#&!"
 
 echo ""
-echo "✅ Semua akun telah disesuaikan dengan $EXP_INPUT hari."
+echo "✅ Semua akun telah Mendapatkan GARANSI dengan $EXP_INPUT hari."
 echo "📁 File konfigurasi: $FILE"
 # Opsional: systemctl reload xray
