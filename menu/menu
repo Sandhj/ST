@@ -170,7 +170,7 @@ case $opt in
     1) clear ; vmessmenu ;;
     2) clear ; vlessmenu ;;
     3) clear ; trojanmenu ;;
-    4) clear ; sodosokmenu ;;
+    4) clear ; renew_all_xray ;;
     5) clear ; echo -e "Comming Soon" ;;
     6) clear ; settingmenu ;;
     *) echo -e "${YB}Invalid input${NC}" ; sleep 1 ; menu ;;
