@@ -1,34 +1,87 @@
 #!/bin/bash
 
-FILE="/usr/local/etc/xray/config/04_inbounds.json"
+CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 
-echo "——————————————————————————————————"
-echo "     DELETE XRAY VMESS ACCOUNT    " 
-echo "——————————————————————————————————"
+# Cek apakah file ada
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "❌ File konfigurasi tidak ditemukan: $CONFIG_FILE"
+    exit 1
+fi
 
+# Dapatkan daftar user unik (tanpa duplikat), urutkan
+mapfile -t USERS < <(grep -o '### [^ ]\+' "$CONFIG_FILE" | awk '{print $2}' | sort -u)
 
-USER_LIST=$(grep "###" "$FILE" | awk -F'###' '{print $2}' | awk '{print $1}' | sort | uniq)
-USER_LIST_WITH_NUM=$(echo "$USER_LIST" | nl)
-echo "$USER_LIST_WITH_NUM"
-echo "——————————————————————————————————"
+# Tampilkan header
+printf '+----+---------------------------+------------+\n'
+printf '| %-2s | %-25s | %-10s |\n' "No" "User" "Expired"
+printf '+----+---------------------------+------------+\n'
 
-read -p "Input Nomor (atau ketik 'all' untuk menghapus semua): " INPUT
+if [[ ${#USERS[@]} -eq 0 ]]; then
+    printf '| %-50s |\n' "Tidak ada user Vmess ditemukan"
+    printf '+--------------------------------------------------+\n'
+    exit 0
+fi
 
-# Validasi input
-if [[ "$INPUT" == "all" ]]; then
-    echo "Hapus Semua User..."
-    for USER in $USER_LIST; do
-        sed -i "/### $USER/{N;d}" "$FILE"
-    done
-    echo "Semua User Telah Di Hapus"
-elif [[ "$INPUT" =~ ^[0-9]+$ ]]; then
-    SELECTED_USER=$(echo "$USER_LIST" | sed -n "${INPUT}p")
-    if [[ -n "$SELECTED_USER" ]]; then
-        sed -i "/### $SELECTED_USER/{N;d}" "$FILE"
-        echo "Sukses Menghapus '$SELECTED_USER'"
+# Tampilkan user dalam tabel dengan nomor
+for i in "${!USERS[@]}"; do
+    USER="${USERS[i]}"
+    # Ambil baris lengkap untuk ekstrak tanggal
+    FULL_LINE=$(grep "### $USER " "$CONFIG_FILE" | head -n1)
+    EXPIRY_DATE=$(awk -v usr="$USER" '$2 == usr {print $3; exit}' <<< "$FULL_LINE")
+
+    if [[ -n "$EXPIRY_DATE" ]] && date -d "$EXPIRY_DATE" >/dev/null 2>&1; then
+        TODAY_EPOCH=$(date +%s)
+        EXPIRY_EPOCH=$(date -d "$EXPIRY_DATE" +%s)
+        DAYS_LEFT=$(( (EXPIRY_EPOCH - TODAY_EPOCH) / 86400 ))
+        (( DAYS_LEFT < 0 )) && DAYS_LEFT=0
+        EXPIRED_TEXT="${DAYS_LEFT} Days"
     else
-        echo "Nomor user tidak valid."
+        EXPIRED_TEXT="Invalid"
     fi
+
+    printf '| %-2s | %-25s | %-10s |\n' "$((i+1))" "$USER" "$EXPIRED_TEXT"
+done
+
+printf '+----+---------------------------+------------+\n'
+
+# Input user
+read -rp "Input Nomor (atau ketik 'all' untuk hapus semua): " INPUT
+
+if [[ "$INPUT" == "all" ]]; then
+    echo -e "\n🗑️  Menghapus semua user..."
+    for USER in "${USERS[@]}"; do
+        # Hapus baris yang berisi ### USER dan satu baris sebelumnya
+        sed -i "/### $USER /{x;d;};h" "$CONFIG_FILE" 2>/dev/null || true
+        # Alternatif lebih aman: hapus blok secara manual dengan dua pola
+        tac "$CONFIG_FILE" | sed "0,/### $USER /{s/### $USER .*/#REMOVED#/;}" | tac | sed "/#REMOVED#/,+1d" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+    done
+    echo "✅ Semua user telah dihapus."
+
+elif [[ "$INPUT" =~ ^[0-9]+$ ]] && (( INPUT >= 1 && INPUT <= ${#USERS[@]} )); then
+    SELECTED_USER="${USERS[INPUT-1]}"
+    echo -e "\n🗑️  Menghapus user: $SELECTED_USER"
+
+    # Strategi aman: hapus baris yang berisi ### user DAN baris sebelumnya
+    # Karena susah di sed, kita gunakan pendekatan sementara dengan file tmp
+    {
+        prev_line=""
+        while IFS= read -r line; do
+            if [[ "$line" == *"### $SELECTED_USER "* ]]; then
+                # Lewati baris ini DAN baris sebelumnya (jangan cetak keduanya)
+                prev_line=""  # jangan output prev_line
+                continue
+            fi
+            # Cetak prev_line jika aman
+            [[ -n "$prev_line" ]] && echo "$prev_line"
+            prev_line="$line"
+        done < "$CONFIG_FILE"
+        # Cetak baris terakhir jika tidak dihapus
+        [[ -n "$prev_line" ]] && echo "$prev_line"
+    } > "${CONFIG_FILE}.tmp"
+
+    mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+    echo "✅ User '$SELECTED_USER' berhasil dihapus."
+
 else
-    echo "Input tidak valid. Silakan masukkan nomor atau 'all'."
+    echo "❌ Input tidak valid. Harap masukkan nomor antara 1–${#USERS[@]} atau 'all'."
 fi
