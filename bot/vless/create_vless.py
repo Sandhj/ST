@@ -103,7 +103,7 @@ def process_days_step(message, username):
         vlesslink3 = f"vless://{uuid_val}@{domain}:443?type=http&security=tls&path=%2Fvless-hup#{user}-http-tls"
         vlesslink4 = f"vless://{uuid_val}@{domain}:80?type=http&security=none&path=%2Fvless-hup#{user}-http-ntls"
         vlesslink5 = f"vless://{uuid_val}@{domain}:443?type=grpc&security=tls&serviceName=vless-grpc#{user}-grpc"
-        vlesslink6 = f"vless://{uuid_val}@{domain}:443?security=tls&flow=xtls-rprx-vision#{user}-xtls"
+        #vlesslink6 = f"vless://{uuid_val}@{domain}:443?security=tls&flow=xtls-rprx-vision#{user}-xtls"
         
         # Restart Xray Service
         try:
@@ -145,9 +145,6 @@ def process_days_step(message, username):
 
 *🎯 gRPC TLS (443)*
 `{vlesslink5}`
-
-*✨ XTLS Vision (443)*
-`{vlesslink6}`
 
 ⚠️ *Note:* 
 - Simpan config dengan aman
