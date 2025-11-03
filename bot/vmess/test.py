@@ -1,7 +1,7 @@
 def add_to_config(user, uuid, days):
     exp_date = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
-    new_entry = f'{{"id": "{uuid}", "alterId": 0, "email": "{user_lower}"}},'  # Use lowercase username
-    comment_line = f"## {user_lower} {exp_date}"  # Use lowercase username
+    new_entry = f'}},"id": "{uuid}","email": "{user_lower}"}}'
+    comment_line = f"## {user_lower} {exp_date}" 
     config_file = "/usr/local/etc/xray/config/04_inbounds.json"
     
     # Create a temporary file with the new content
@@ -12,3 +12,6 @@ def add_to_config(user, uuid, days):
     'sed', '-i', r'/#vmess$/r /dev/stdin', config_file
     ], input=temp_content.encode())
     
+
+### cahya-VWTW 2025-11-26
+},{"id": "ID","email": "email"
