@@ -100,7 +100,7 @@ def process_days_step(message, username):
 
         # Masukkan user ke config
         new_entry = f'}},"id": "{uuid_val}","email": "{user}"}}'
-        comment_line = f"## {user} {exp}" 
+        comment_line = f"### {user} {exp}" 
         config_file = "/usr/local/etc/xray/config/04_inbounds.json"
         temp_content = f"{comment_line}\n{new_entry}\n"
 
