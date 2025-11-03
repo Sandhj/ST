@@ -103,14 +103,23 @@ def process_days_step(message, username):
         comment_line = f"## {user} {exp}" 
         config_file = "/usr/local/etc/xray/config/04_inbounds.json"
         temp_content = f"{comment_line}\n{new_entry}\n"
-        subprocess.run([
-        'sed', '-i', r'/#vmess$/r /dev/stdin', config_file
-        ], input=temp_content.encode())
+
+        with open(config_file, 'r') as f:
+            lines = f.readlines()
+
+        new_lines = []
+        for line in lines:
+            new_lines.append(line)
+            if '#vmess' in line:  # Jika baris mengandung #vmess di mana saja
+                new_lines.append(temp_content)
+
+        with open(config_file, 'w') as f:
+            f.writelines(new_lines)
         
         ISP = read_config_file("/usr/local/etc/xray/org")
         CITY = read_config_file("/usr/local/etc/xray/city")
         REG = read_config_file("/usr/local/etc/xray/region")
-        
+                
         # Membuat Tautan Vmess
         vmesslink1 = create_vmess_link("vmess-ws-tls", "443", "ws", "/vmess-ws", "tls")
         vmesslink2 = create_vmess_link("vmess-ws-ntls", "80", "ws", "/vmess-ws", "none")
