@@ -11,18 +11,13 @@ generate_uuid() {
 
 # Fungsi untuk menambahkan konfigurasi ke file Xray
 add_xray_config() {
-    local section=$1
-    local content=$2
-    sed -i "/#$section\$/a\\### $user $exp\n$content" /usr/local/etc/xray/config/04_inbounds.json
+    sed -i "/#$1\$/a\\### $user $exp\n$2" /usr/local/etc/xray/config/04_inbounds.json
 }
 
 # Inisialisasi Variabel
 domain=$(cat /usr/local/etc/xray/dns/domain)
 uuid=$(generate_uuid)
 
-#echo -e "${BB}———————————————————————————————————————${NC}"
-#echo -e "${BB}            Create New User ${NC}           "
-#echo -e "${BB}———————————————————————————————————————${NC}"
 read -p "Username :" username
 
 while true; do
@@ -50,25 +45,19 @@ add_xray_config "vmess" "},{\"id\": \"$uuid\",\"email\": \"$user\""
 
 # Fungsi untuk membuat tautan Vmess
 create_vmess_link() {
-    local version="2"
-    local ps=$1
-    local port=$2
-    local net=$3
-    local path=$4
-    local tls=$5
     cat <<EOF | base64 -w 0
 {
-"v": "$version",
-"ps": "$ps",
+"v": "2",
+"ps": "$1",
 "add": "$domain",
-"port": "$port",
+"port": "$2",
 "id": "$uuid",
 "aid": "0",
-"net": "$net",
-"path": "$path",
+"net": "$3",
+"path": "$4",
 "type": "none",
 "host": "$domain",
-"tls": "$tls"
+"tls": "$5"
 }
 EOF
 }
