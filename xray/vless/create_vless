@@ -18,18 +18,13 @@ generate_uuid() {
 
 # Fungsi untuk menambahkan konfigurasi ke file Xray
 add_xray_config() {
-    local section=$1
-    local content=$2
-    sed -i "/#$section\$/a\\##! $user $exp\n$content" /usr/local/etc/xray/config/04_inbounds.json
+    sed -i "/#$1\$/a\\##! $user $exp\n$2" /usr/local/etc/xray/config/04_inbounds.json
 }
 
 # Inisialisasi Variabel
 domain=$(cat /usr/local/etc/xray/dns/domain)
 uuid=$(generate_uuid)
 
-#echo -e "${BB}———————————————————————————————————————${NC}"
-#echo -e "${BB}            Create New User ${NC}           "
-#echo -e "${BB}———————————————————————————————————————${NC}"
 read -p "Username :" username
 while true; do
     read -p "Expired :" masaaktif
