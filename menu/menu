@@ -119,7 +119,7 @@ trojan_count=$(awk '/#&!/ {count++} END {print count+0}' "$config_file" 2>/dev/n
 ss_count=$(awk '/##@/ {count++} END {print count+0}' "$config_file" 2>/dev/null)
 
 vmess=$(( vmess_count / 3 ))
-vless=$(( vless_count / 4 ))
+vless=$(( vless_count / 3 ))
 trojan=$(( trojan_count / 6 ))
 ss=$(( ss_count / 6 ))
 
