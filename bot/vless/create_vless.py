@@ -21,40 +21,6 @@ def read_config_file(filename):
 def generate_uuid():
     return str(uuid.uuid4())
 
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    welcome_text = """
-⚡ *Vless Account Generator Bot*
-
-*Available Commands:*
-`/buatvless` - Buat akun Vless baru
-`/info` - Info bot
-
-Bot ini akan membantu Anda membuat konfigurasi Vless secara otomatis.
-    """
-    bot.reply_to(message, welcome_text, parse_mode='Markdown')
-
-@bot.message_handler(commands=['info'])
-def send_info(message):
-    info_text = """
-📊 *Bot Information*
-
-*Features:*
-• Generate Vless accounts automatically
-• Multiple protocol support (WS, gRPC, HTTP Upgrade, XTLS)
-• TLS & non-TLS configurations
-• Auto-restart Xray service
-
-*Supported Protocols:*
-├── WebSocket (WS)
-├── gRPC
-├── HTTP Upgrade
-└── XTLS Vision
-
-*Developer:* @YourUsername
-    """
-    bot.reply_to(message, info_text, parse_mode='Markdown')
-
 @bot.message_handler(commands=['buatvless'])
 def create_vless_account(message):
     msg = bot.reply_to(message, "👤 *Masukkan username:*", parse_mode='Markdown')
@@ -108,6 +74,24 @@ def process_days_step(message, username):
         # Hitung tanggal expired
         exp = (datetime.datetime.now() + datetime.timedelta(days=masaaktif)).strftime("%Y-%m-%d")
         created = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        # Masukkan user ke config
+        new_entry = f'}},{{"id": "{uuid_val}","email": "{user}"'
+        comment_line = f"##! {user} {exp}" 
+        config_file = "/usr/local/etc/xray/config/04_inbounds.json"
+        temp_content = f"{comment_line}\n{new_entry}\n"
+
+        with open(config_file, 'r') as f:
+            lines = f.readlines()
+
+        new_lines = []
+        for line in lines:
+            new_lines.append(line)
+            if '#vless' in line:  # Jika baris mengandung #vmess di mana saja
+                new_lines.append(temp_content)
+
+        with open(config_file, 'w') as f:
+            f.writelines(new_lines)
         
         ISP = read_config_file("/usr/local/etc/xray/org")
         CITY = read_config_file("/usr/local/etc/xray/city")
@@ -181,23 +165,5 @@ def process_days_step(message, username):
     except Exception as e:
         bot.reply_to(message, f"❌ Terjadi error: {str(e)}")
 
-# Handler untuk pesan selain command
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    help_text = """
-❓ *Perintah tidak dikenali*
-
-Gunakan salah satu perintah berikut:
-`/start` - Memulai bot
-`/buatvless` - Buat akun Vless baru
-`/info` - Informasi bot
-
-Ketik /start untuk memulai.
-    """
-    bot.reply_to(message, help_text, parse_mode='Markdown')
-
 if __name__ == "__main__":
-    print("⚡ Bot Vless Account Generator sedang berjalan...")
-    print("📍 Token:", TOKEN)
-    print("⏰", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     bot.polling()
