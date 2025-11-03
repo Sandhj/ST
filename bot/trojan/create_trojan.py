@@ -22,40 +22,6 @@ def read_config_file(filename):
 def generate_password():
     return secrets.token_hex(4)
 
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    welcome_text = """
-🛡️ *Trojan Account Generator Bot*
-
-*Available Commands:*
-`/buattrojan` - Buat akun Trojan baru
-`/info` - Info bot
-
-Bot ini akan membantu Anda membuat konfigurasi Trojan secara otomatis.
-    """
-    bot.reply_to(message, welcome_text, parse_mode='Markdown')
-
-@bot.message_handler(commands=['info'])
-def send_info(message):
-    info_text = """
-📊 *Bot Information*
-
-*Features:*
-• Generate Trojan accounts automatically
-• Multiple protocol support (WS, gRPC, HTTP Upgrade, TCP)
-• TLS & non-TLS configurations
-• Auto-restart Xray service
-
-*Supported Protocols:*
-├── WebSocket (WS)
-├── gRPC
-├── HTTP Upgrade
-└── TCP TLS
-
-*Developer:* @YourUsername
-    """
-    bot.reply_to(message, info_text, parse_mode='Markdown')
-
 @bot.message_handler(commands=['buattrojan'])
 def create_trojan_account(message):
     msg = bot.reply_to(message, "👤 *Masukkan username:*", parse_mode='Markdown')
@@ -122,7 +88,7 @@ def process_days_step(message, username):
         new_lines = []
         for line in lines:
             new_lines.append(line)
-            if '#vmess' in line:  # Jika baris mengandung #vmess di mana saja
+            if '#trojan' in line:  # Jika baris mengandung #vmess di mana saja
                 new_lines.append(temp_content)
 
         with open(config_file, 'w') as f:
@@ -200,23 +166,6 @@ def process_days_step(message, username):
     except Exception as e:
         bot.reply_to(message, f"❌ Terjadi error: {str(e)}")
 
-# Handler untuk pesan selain command
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    help_text = """
-❓ *Perintah tidak dikenali*
-
-Gunakan salah satu perintah berikut:
-`/start` - Memulai bot
-`/buattrojan` - Buat akun Trojan baru
-`/info` - Informasi bot
-
-Ketik /start untuk memulai.
-    """
-    bot.reply_to(message, help_text, parse_mode='Markdown')
 
 if __name__ == "__main__":
-    print("🛡️ Bot Trojan Account Generator sedang berjalan...")
-    print("📍 Token:", TOKEN)
-    print("⏰", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     bot.polling()
