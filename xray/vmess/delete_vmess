@@ -2,86 +2,69 @@
 
 CONFIG_FILE="/usr/local/etc/xray/config/04_inbounds.json"
 
-# Cek apakah file ada
-if [[ ! -f "$CONFIG_FILE" ]]; then
-    echo "❌ File konfigurasi tidak ditemukan: $CONFIG_FILE"
-    exit 1
-fi
+# Lebar kolom
+USER_WIDTH=25
+DAYS_WIDTH=10
+NUM_WIDTH=3
 
-# Dapatkan daftar user unik (tanpa duplikat), urutkan
-mapfile -t USERS < <(grep -o '### [^ ]\+' "$CONFIG_FILE" | awk '{print $2}' | sort -u)
+# Fungsi untuk mencetak garis pemisah tabel
+print_separator() {
+    printf "+-%s-+-%s-+-%s-+\n" \
+        "$(printf '%*s' "$NUM_WIDTH" | tr ' ' '-')" \
+        "$(printf '%*s' "$USER_WIDTH" | tr ' ' '-')" \
+        "$(printf '%*s' "$DAYS_WIDTH" | tr ' ' '-')"
+}
 
-# Tampilkan header
-printf '+----+---------------------------+------------+\n'
-printf '| %-2s | %-25s | %-10s |\n' "No" "User" "Expired"
-printf '+----+---------------------------+------------+\n'
+# Header
+print_separator
+printf "| %-*s | %-*s | %-*s |\n" "$NUM_WIDTH" "No" "$USER_WIDTH" "User" "$DAYS_WIDTH" "Expired"
+print_separator
 
-if [[ ${#USERS[@]} -eq 0 ]]; then
-    printf '| %-50s |\n' "Tidak ada user Vmess ditemukan"
-    printf '+--------------------------------------------------+\n'
-    exit 0
-fi
+# Array untuk menyimpan user
+users=()
+index=0
 
-# Tampilkan user dalam tabel dengan nomor
-for i in "${!USERS[@]}"; do
-    USER="${USERS[i]}"
-    # Ambil baris lengkap untuk ekstrak tanggal
-    FULL_LINE=$(grep "### $USER " "$CONFIG_FILE" | head -n1)
-    EXPIRY_DATE=$(awk -v usr="$USER" '$2 == usr {print $3; exit}' <<< "$FULL_LINE")
+# Proses file tanpa subshell
+declare -A processed_users
 
-    if [[ -n "$EXPIRY_DATE" ]] && date -d "$EXPIRY_DATE" >/dev/null 2>&1; then
-        TODAY_EPOCH=$(date +%s)
-        EXPIRY_EPOCH=$(date -d "$EXPIRY_DATE" +%s)
-        DAYS_LEFT=$(( (EXPIRY_EPOCH - TODAY_EPOCH) / 86400 ))
-        (( DAYS_LEFT < 0 )) && DAYS_LEFT=0
-        EXPIRED_TEXT="${DAYS_LEFT} Days"
-    else
-        EXPIRED_TEXT="Invalid"
+while IFS= read -r line; do
+    if [[ "$line" == *"###"* ]]; then
+        USER=$(awk '{print $2}' <<< "$line")
+        EXPIRY_DATE=$(awk '{print $3}' <<< "$line")
+
+        [[ -z "$USER" ]] && continue
+        [[ -n "${processed_users[$USER]}" ]] && continue
+        processed_users[$USER]=1
+
+        if [[ -n "$EXPIRY_DATE" ]] && date -d "$EXPIRY_DATE" >/dev/null 2>&1; then
+            TODAY_EPOCH=$(date +%s)
+            EXPIRY_EPOCH=$(date -d "$EXPIRY_DATE" +%s)
+            DAYS_LEFT=$(( (EXPIRY_EPOCH - TODAY_EPOCH) / 86400 ))
+            (( DAYS_LEFT < 0 )) && DAYS_LEFT=0
+            EXPIRED_TEXT="${DAYS_LEFT} Days"
+        else
+            EXPIRED_TEXT="Invalid"
+        fi
+
+        printf "| %-*s | %-*s | %-*s |\n" "$NUM_WIDTH" "$((++index))" "$USER_WIDTH" "$USER" "$DAYS_WIDTH" "$EXPIRED_TEXT"
+        users+=("$USER")
     fi
+done < "$CONFIG_FILE"
 
-    printf '| %-2s | %-25s | %-10s |\n' "$((i+1))" "$USER" "$EXPIRED_TEXT"
-done
+# Footer
+print_separator
 
-printf '+----+---------------------------+------------+\n'
+# Tampilkan prompt jika ada user
+if (( ${#users[@]} > 0 )); then
+    echo
+    read -p "Pilih nomor user untuk menampilkan nama: " choice
 
-# Input user
-read -rp "Input Nomor (atau ketik 'all' untuk hapus semua): " INPUT
-
-if [[ "$INPUT" == "all" ]]; then
-    echo -e "\n🗑️  Menghapus semua user..."
-    for USER in "${USERS[@]}"; do
-        # Hapus baris yang berisi ### USER dan satu baris sebelumnya
-        sed -i "/### $USER /{x;d;};h" "$CONFIG_FILE" 2>/dev/null || true
-        # Alternatif lebih aman: hapus blok secara manual dengan dua pola
-        tac "$CONFIG_FILE" | sed "0,/### $USER /{s/### $USER .*/#REMOVED#/;}" | tac | sed "/#REMOVED#/,+1d" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    done
-    echo "✅ Semua user telah dihapus."
-
-elif [[ "$INPUT" =~ ^[0-9]+$ ]] && (( INPUT >= 1 && INPUT <= ${#USERS[@]} )); then
-    SELECTED_USER="${USERS[INPUT-1]}"
-    echo -e "\n🗑️  Menghapus user: $SELECTED_USER"
-
-    # Strategi aman: hapus baris yang berisi ### user DAN baris sebelumnya
-    # Karena susah di sed, kita gunakan pendekatan sementara dengan file tmp
-    {
-        prev_line=""
-        while IFS= read -r line; do
-            if [[ "$line" == *"### $SELECTED_USER "* ]]; then
-                # Lewati baris ini DAN baris sebelumnya (jangan cetak keduanya)
-                prev_line=""  # jangan output prev_line
-                continue
-            fi
-            # Cetak prev_line jika aman
-            [[ -n "$prev_line" ]] && echo "$prev_line"
-            prev_line="$line"
-        done < "$CONFIG_FILE"
-        # Cetak baris terakhir jika tidak dihapus
-        [[ -n "$prev_line" ]] && echo "$prev_line"
-    } > "${CONFIG_FILE}.tmp"
-
-    mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-    echo "✅ User '$SELECTED_USER' berhasil dihapus."
-
+    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#users[@]} )); then
+        selected_user="${users[$((choice - 1))]}"
+        echo "User yang dipilih: $selected_user"
+    else
+        echo "Pilihan tidak valid."
+    fi
 else
-    echo "❌ Input tidak valid. Harap masukkan nomor antara 1–${#USERS[@]} atau 'all'."
+    echo "Tidak ada user ditemukan."
 fi
