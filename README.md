@@ -30,7 +30,7 @@ wget -q https://raw.githubusercontent.com/Sandhj/ST/main/install.sh && chmod +x 
 ```
 
 ```
-wget -q https://raw.githubusercontent.com/Sandhj/ST/main/setupbot.sh && chmod +x setupbot.sh && ./setupbot.sh
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/setupbot.sh && chmod +x setupbot.sh && ./setupbot.sh
 ```
 
 ## For Registrasi 
