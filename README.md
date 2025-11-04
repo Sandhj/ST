@@ -29,6 +29,10 @@ Script ini telah diuji dan mendukung sistem operasi berikut:
 wget -q https://raw.githubusercontent.com/Sandhj/ST/main/install.sh && chmod +x install.sh && ./install.sh
 ```
 
+```
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/setupbot.sh && chmod +x setupbot.sh && ./setupbot.sh
+```
+
 ## For Registrasi 
 - Telegram : Sanmaxx
 - WhatsApp : 085155208019
