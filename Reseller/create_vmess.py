@@ -1,4 +1,3 @@
-
 import uuid
 import datetime
 import random
@@ -42,19 +41,35 @@ def create_vmess_link(ps, port, net, path, tls):
 
 
 def create_vmess_account(bot, message):
-    msg = bot.reply_to(message, "👤 *Masukkan username:*", parse_mode='Markdown')
+    msg = bot.reply_to(message, "👤 *Masukkan username:*\n\n⚠️ *Rules:*\n- Hanya huruf dan angka\n- Maksimal 12 karakter\n- Ketik /cancel untuk membatalkan", parse_mode='Markdown')
     bot.register_next_step_handler(msg, process_username_step, bot)
 
 def process_username_step(message, bot):
     try:
         username = message.text.strip()
         
+        # Check for cancel command
+        if username.lower() == '/cancel':
+            bot.reply_to(message, "❌ *Pembuatan akun Vmess dibatalkan*", parse_mode='Markdown')
+            return
+            
         if not username:
-            msg = bot.reply_to(message, "❌ Username tidak boleh kosong!\n👤 *Masukkan username:*", parse_mode='Markdown')
+            msg = bot.reply_to(message, "❌ Username tidak boleh kosong!\n👤 *Masukkan username:*\n\n⚠️ *Rules:*\n- Hanya huruf dan angka\n- Maksimal 12 karakter\n- Ketik /cancel untuk membatalkan", parse_mode='Markdown')
+            bot.register_next_step_handler(msg, process_username_step, bot)
+            return
+        
+        # Validasi username: hanya huruf dan angka, maksimal 12 karakter
+        if len(username) > 12:
+            msg = bot.reply_to(message, f"❌ Username terlalu panjang! Maksimal 12 karakter.\n\n👤 *Masukkan username:*\n\n⚠️ *Rules:*\n- Hanya huruf dan angka\n- Maksimal 12 karakter\n- Ketik /cancel untuk membatalkan", parse_mode='Markdown')
             bot.register_next_step_handler(msg, process_username_step, bot)
             return
             
-        msg = bot.reply_to(message, "📅 *Masukkan masa aktif (dalam hari):*", parse_mode='Markdown')
+        if not username.isalnum():
+            msg = bot.reply_to(message, "❌ Username hanya boleh mengandung huruf dan angka!\n\n👤 *Masukkan username:*\n\n⚠️ *Rules:*\n- Hanya huruf dan angka\n- Maksimal 12 karakter\n- Ketik /cancel untuk membatalkan", parse_mode='Markdown')
+            bot.register_next_step_handler(msg, process_username_step, bot)
+            return
+        
+        msg = bot.reply_to(message, "📅 *Masukkan masa aktif (dalam hari):*\n\nKetik /cancel untuk membatalkan", parse_mode='Markdown')
         bot.register_next_step_handler(msg, process_days_step, username, bot)
     except Exception as e:
         bot.reply_to(message, f"❌ Terjadi error: {str(e)}")
@@ -64,16 +79,21 @@ def process_days_step(message, username, bot):
         chat_id = message.chat.id
         masaaktif = message.text.strip()
         
+        # Check for cancel command
+        if masaaktif.lower() == '/cancel':
+            bot.reply_to(message, "❌ *Pembuatan akun Vmess dibatalkan*", parse_mode='Markdown')
+            return
+        
         # Validasi input angka
         if not masaaktif.isdigit():
-            msg = bot.reply_to(message, "❌ Masukkan angka yang valid!\n📅 *Masukkan masa aktif (dalam hari):*", parse_mode='Markdown')
+            msg = bot.reply_to(message, "❌ Masukkan angka yang valid!\n📅 *Masukkan masa aktif (dalam hari):*\n\nKetik /cancel untuk membatalkan", parse_mode='Markdown')
             bot.register_next_step_handler(msg, process_days_step, username, bot)
             return
         
         masaaktif = int(masaaktif)
         
         if masaaktif <= 0:
-            msg = bot.reply_to(message, "❌ Masa aktif harus lebih dari 0!\n📅 *Masukkan masa aktif (dalam hari):*", parse_mode='Markdown')
+            msg = bot.reply_to(message, "❌ Masa aktif harus lebih dari 0!\n📅 *Masukkan masa aktif (dalam hari):*\n\nKetik /cancel untuk membatalkan", parse_mode='Markdown')
             bot.register_next_step_handler(msg, process_days_step, username, bot)
             return
         
