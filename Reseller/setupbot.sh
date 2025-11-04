@@ -4,6 +4,10 @@ cd
 mkdir -p sanbot
 cd sanbot
 
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_vmess.py
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_vless.py
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_trojan.py
+
 # Install Modul
 python3 -m venv bot
 source bot/bin/activate
