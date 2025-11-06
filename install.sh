@@ -437,6 +437,8 @@ wget -q ${HOSTING}/xray/vmess/renew_vmess
 wget -q ${HOSTING}/xray/vmess/list_vmess
 wget -q ${HOSTING}/xray/vmess/vmess_custom
 
+wget -q ${HOSTING}/xray/renew_all_xray
+
 wget -q ${HOSTING}/traffic.py
 
 chmod +x /root/san/*
