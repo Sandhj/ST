@@ -102,6 +102,8 @@ def send_welcome(message):
 silahkan lakukan pembayaran ke admin @sanmaxx . Jika tidak ada pembayaran kamu akan di
 blokir dari akses bot dan akun yang dibuat akan di hapus.
 
+🚨 Jangan Spam Pembuatan Akun MELANGGAR BLOKIR PERMANEN
+
 Jika Berminat Join Reseller Bisa Hubungi Admin, Dengan Harga lebih murah
 """
     
