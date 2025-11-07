@@ -96,7 +96,7 @@ def send_welcome(message):
     welcome_text = """
 🤖 *Welcome to VPN Bot*
 
-*Harga VPN* : 7.000/30hari
+*Harga VPN* : Rp233/hari
 *Limit* : 2 Device
 *Support* : HP & STB
 
