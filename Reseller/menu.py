@@ -472,9 +472,9 @@ def send_welcome(message):
     btn_vmess = InlineKeyboardButton("🔄 VMESS", callback_data="vmess")
     btn_vless = InlineKeyboardButton("⚡ VLESS", callback_data="vless")
     btn_trojan = InlineKeyboardButton("🔒 TROJAN", callback_data="trojan")
-    btn_vmess_stb = InlineKeyboardButton("🔄 VMESS", callback_data="vmess_stb")
-    btn_vless_stb = InlineKeyboardButton("⚡ VLESS", callback_data="vless_stb")
-    btn_trojan_stb = InlineKeyboardButton("🔒 TROJAN", callback_data="trojan_stb")
+    btn_vmess_stb = InlineKeyboardButton("🔄 VMESS-STB", callback_data="vmess_stb")
+    btn_vless_stb = InlineKeyboardButton("⚡ VLESS-STB", callback_data="vless_stb")
+    btn_trojan_stb = InlineKeyboardButton("🔒 TROJAN-STB", callback_data="trojan_stb")
     
     markup.add(btn_vmess, btn_vless, btn_trojan)
     markup.add(btn_vmess_stb, btn_vless_stb, btn_trojan_stb)
