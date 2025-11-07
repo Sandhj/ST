@@ -92,8 +92,6 @@ def send_welcome(message):
     welcome_text = """
 🤖 *Welcome to VPN Bot*
 
-*CHATID* : {chat_id}
-
 *Harga VPN* : 7.000/30hari
 *Limit* : 2 Device
 *Support* : HP & STB
