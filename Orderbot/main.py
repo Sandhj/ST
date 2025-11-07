@@ -90,9 +90,19 @@ def send_welcome(message):
         markup.add(btn_admin)
     
     welcome_text = """
-🤖 **Welcome to VPN Bot**
+🤖 *Welcome to VPN Bot*
 
-Pilih jenis konfigurasi:
+*CHATID* : {chat_id}
+
+*Harga VPN* : 7.000/30hari
+*Limit* : 2 Device
+*Support* : HP & STB
+
+‼️Bot tidak menggunakan Payment Gateway jadi setelah akun berhasil dibuat 
+silahkan lakukan pembayaran ke admin @sanmaxx . Jika tidak ada pembayaran kamu akan di
+blokir dari akses bot dan akun yang dibuat akan di hapus.
+
+Jika Berminat Join Reseller Bisa Hubungi Admin, Dengan Harga lebih murah
 """
     
     bot.send_message(
