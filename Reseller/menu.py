@@ -6,6 +6,9 @@ import time
 from create_vmess import create_vmess_account
 from create_vless import create_vless_account
 from create_trojan import create_trojan_account
+from create_vmess_stb import create_vmess_stb_account
+from create_vless_stb import create_vless_stb_account
+from create_trojan_stb import create_trojan_stb_account
 
 # Inisialisasi bot
 bot = telebot.TeleBot('8255110757:AAFGiEMmjP8LWPbcArK2QDafxq12j7NKPkc')
@@ -469,8 +472,12 @@ def send_welcome(message):
     btn_vmess = InlineKeyboardButton("🔄 VMESS", callback_data="vmess")
     btn_vless = InlineKeyboardButton("⚡ VLESS", callback_data="vless")
     btn_trojan = InlineKeyboardButton("🔒 TROJAN", callback_data="trojan")
+    btn_vmess_stb = InlineKeyboardButton("🔄 VMESS", callback_data="vmess_stb")
+    btn_vless_stb = InlineKeyboardButton("⚡ VLESS", callback_data="vless_stb")
+    btn_trojan_stb = InlineKeyboardButton("🔒 TROJAN", callback_data="trojan_stb")
     
     markup.add(btn_vmess, btn_vless, btn_trojan)
+    markup.add(btn_vmess_stb, btn_vless_stb, btn_trojan_stb)
     
     welcome_text = """
 ✨ *SANSTORE BOT* ✨
@@ -516,6 +523,12 @@ def handle_callback(call):
         create_vless_account(bot, call.message)
     elif call.data == 'trojan':
         create_trojan_account(bot, call.message)
+    elif call.data == 'vmess_stb':
+        create_vmess_stb_account(bot, call.message)
+    elif call.data == 'vless_stb':
+        create_vless_stb_account(bot, call.message)
+    elif call.data == 'trojan_stb':
+        create_trojan_stb_account(bot, call.message)
 
 # Fungsi untuk inisialisasi admin pertama
 def initialize_first_admin():
