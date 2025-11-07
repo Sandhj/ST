@@ -7,7 +7,7 @@ from create_vless import create_vless_account
 from create_trojan import create_trojan_account
 
 # Konfigurasi
-BOT_TOKEN = "7618239092:AAGeuIEoDpsEAQkCVPyo3mbBDc-rZ5o3QQQ"
+BOT_TOKEN = "8532237499:AAF_OMYRoUiO1sGJKNy4qU8r2G4hmy5LsxA"
 ADMIN_CHAT_ID = 576495165
 BLACKLIST_FILE = "blacklist.txt"
 
