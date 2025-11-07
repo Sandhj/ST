@@ -196,10 +196,25 @@ def handle_callback(call):
     
     # Handle tombol konfigurasi VPN biasa
     elif call.data == "vmess":
+        bot.edit_message_reply_markup(
+               chat_id=call.message.chat.id,
+               message_id=call.message.message_id,
+               reply_markup=None
+        )
         create_vmess_account(bot, call.message)
     elif call.data == "vless":
+        bot.edit_message_reply_markup(
+               chat_id=call.message.chat.id,
+               message_id=call.message.message_id,
+               reply_markup=None
+        )
         create_vless_account(bot, call.message)
     elif call.data == "trojan":
+        bot.edit_message_reply_markup(
+               chat_id=call.message.chat.id,
+               message_id=call.message.message_id,
+               reply_markup=None
+        )
         create_trojan_account(bot, call.message)
 
 # Fungsi untuk menampilkan panel admin
