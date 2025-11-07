@@ -7,8 +7,12 @@ cd sanbot
 wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_vmess.py
 wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_vless.py
 wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_trojan.py
-wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/menu.py
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_vmess_stb.py
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_vless_stb.py
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/create_trojan_stb.py
 
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/menu.py
+wget -q https://raw.githubusercontent.com/Sandhj/ST/main/Reseller/botumum.py
 
 # Install Modul
 python3 -m venv bot
@@ -21,7 +25,7 @@ deactivate
 cat <<EOL > /root/sanbot/run.sh
 #!/bin/bash
 source /root/sanbot/bot/bin/activate
-python3 /root/sanbot/menu.py
+python3 /root/sanbot/menu.py & python3 /root/sanbot/botumum.py
 EOL
 
 # Buat file service systemd
