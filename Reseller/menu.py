@@ -535,7 +535,7 @@ def initialize_first_admin():
     # Tambahkan admin pertama secara manual di sini
     # Contoh: add_admin(123456789)
     # Ganti 123456789 dengan User ID admin pertama Anda
-    first_admin_id = 123456789  # GANTI DENGAN USER ID ADMIN PERTAMA
+    first_admin_id = 576495165  # GANTI DENGAN USER ID ADMIN PERTAMA
     try:
         user = bot.get_chat(first_admin_id)
         add_admin(first_admin_id, user.username)
