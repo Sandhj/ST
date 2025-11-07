@@ -2,6 +2,10 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import os
 
+from create_vmess import create_vmess_account
+from create_vless import create_vless_account
+from create_trojan import create_trojan_account
+
 # Konfigurasi
 BOT_TOKEN = "7618239092:AAGeuIEoDpsEAQkCVPyo3mbBDc-rZ5o3QQQ"
 ADMIN_CHAT_ID = 576495165
@@ -192,11 +196,11 @@ def handle_callback(call):
     
     # Handle tombol konfigurasi VPN biasa
     elif call.data == "vmess":
-        bot.answer_callback_query(call.id, "VMESS selected!")
+        create_vmess_account(bot, call.message)
     elif call.data == "vless":
-        bot.answer_callback_query(call.id, "VLESS selected!")
+        create_vless_account(bot, call.message)
     elif call.data == "trojan":
-        bot.answer_callback_query(call.id, "TROJAN selected!")
+        create_trojan_account(bot, call.message)
 
 # Fungsi untuk menampilkan panel admin
 def show_admin_panel(call):
