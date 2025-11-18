@@ -8,14 +8,6 @@ mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
 mkdir -p /usr/local/etc/xray/config /usr/local/etc/xray/dns >> /dev/null 2>&1
 touch /usr/local/etc/xray/dns/domain
 
-read -p "Masukkan Domain : " dns
-
-echo "$dns" > /usr/local/etc/xray/dns/domain
-echo "DNS=$dns" > /var/lib/dnsvps.conf
-            
-
-# === [INSTAL DEPENDENSI DASAR] ===
-echo "Setup Domain Done"
 echo "Install Paket Yang Dibutuhkan"
 sleep 2
 apt update -y
