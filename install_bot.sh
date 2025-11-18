@@ -398,39 +398,12 @@ systemctl start xp2.timer
 
 # === [TAMPILAN AKHIR] ===
 clear
-echo ""
-echo "—————————————————————————————————————————————————————————"
-echo "                 »»» Protocol Service «««"
-echo "—————————————————————————————————————————————————————————"
-echo "Vmess Websocket     : 443 & 80"
-echo "Vmess HTTPupgrade   : 443 & 80"
-echo "Vmess gRPC          : 443"
-echo ""
-echo "Vless XTLS-Vision   : 443"
-echo "Vless Websocket     : 443 & 80"
-echo "Vless HTTPupgrade   : 443 & 80"
-echo "Vless gRPC          : 443"
-echo ""
-echo "Trojan TCP TLS      : 443"
-echo "Trojan Websocket    : 443 & 80"
-echo "Trojan HTTPupgrade  : 443 & 80"
-echo "Trojan gRPC         : 443"
-echo ""
-echo "SS Websocket        : 443 & 80"
-echo "SS HTTPupgrade      : 443 & 80"
-echo "SS gRPC             : 443"
-echo ""
-echo "SS 2022 Websocket   : 443 & 80"
-echo "SS 2022 HTTPupgrade : 443 & 80"
-echo "SS 2022 gRPC        : 443"
-echo "————————————————————————————————————————————————————————"
-echo ""
 
-rm -f install.sh
-
-read -p "[ WARNING ] reboot now ? (Y/N): " answer
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    reboot
-else
-    exit 0
-fi
+TOKEN="8310348454:AAHStB-GTHuAvx5G2XArai6EL8vELguf22A"
+CHAT_ID="576495165"
+MESSAGE="✅ Installasi Sukses dilakukan"
+# Mengirim pesan
+curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
+    -d chat_id="$CHAT_ID" \
+    -d text="$MESSAGE" \
+    -d parse_mode="Markdown"
