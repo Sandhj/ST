@@ -399,7 +399,7 @@ systemctl start xp2.timer
 # === [TAMPILAN AKHIR] ===
 clear
 
-TOKEN="8310348454:AAHStB-GTHuAvx5G2XArai6EL8vELguf22A"
+TOKEN="8255110757:AAFGiEMmjP8LWPbcArK2QDafxq12j7NKPkc"
 CHAT_ID="576495165"
 MESSAGE="✅ Installasi Sukses dilakukan"
 # Mengirim pesan
