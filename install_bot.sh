@@ -360,8 +360,8 @@ menu
 EOF
 
 # === [WEB RESTORE] ===
-echo "MEMASANG WEB RESTORE..."
-bash -c "$(wget -qO- https://raw.githubusercontent.com/Sandhj/Web-restore/main/setup.sh)"
+#echo "MEMASANG WEB RESTORE..."
+#bash -c "$(wget -qO- https://raw.githubusercontent.com/Sandhj/Web-restore/main/setup.sh)"
 
 # === [CRON & AUTO EXPIRE] ===
 echo "0 5 * * * /sbin/reboot" >> /etc/crontab
