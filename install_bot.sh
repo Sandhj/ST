@@ -360,8 +360,8 @@ menu
 EOF
 
 # === [WEB RESTORE] ===
-#echo "MEMASANG WEB RESTORE..."
-#bash -c "$(wget -qO- https://raw.githubusercontent.com/Sandhj/Web-restore/main/setup.sh)"
+echo "MEMASANG WEB RESTORE..."
+bash -c "$(wget -qO- https://raw.githubusercontent.com/Sandhj/Web-restore/main/setup.sh)"
 
 # === [CRON & AUTO EXPIRE] ===
 echo "0 5 * * * /sbin/reboot" >> /etc/crontab
@@ -399,7 +399,7 @@ systemctl start xp2.timer
 # === [TAMPILAN AKHIR] ===
 clear
 
-TOKEN="8255110757:AAFGiEMmjP8LWPbcArK2QDafxq12j7NKPkc"
+TOKEN="8176151908:AAHwzLjCCFdoXOJJYIV22bLsN1Ew45o1nHo"
 CHAT_ID="576495165"
 MESSAGE="✅ Installasi Sukses dilakukan"
 # Mengirim pesan
