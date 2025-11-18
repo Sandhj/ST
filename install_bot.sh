@@ -2,106 +2,17 @@
 
 HOSTING="https://raw.githubusercontent.com/Sandhj/ST/main"
 
-# === [PERIKSA ROOT] ===
-if [ "$EUID" -ne 0 ]; then
-  echo "Error: Harap jalankan skrip ini sebagai root."
-  exit 1
-fi
-
-# === [FUNGSI VERIFIKASI IP] ===
-verif_ip() {
-    url="https://raw.githubusercontent.com/Sandhj/registrasi-ip/main/IP?$(date +%s)"
-    readarray -t daftar_ip < <(curl -s "$url")
-    current_ip=$(curl -s https://ipinfo.io/ip)
-    current_date=$(date +%Y-%m-%d)
-    current_date_sec=$(date -d "$current_date" +%s)
-    verified=false
-
-    for entry in "${daftar_ip[@]}"; do
-        [[ -z "$entry" || "$entry" =~ ^# ]] && continue
-        IFS=' ' read -r ip expiry_date <<< "$entry"
-        expiry_date_sec=$(date -d "$expiry_date" +%s 2>/dev/null) || continue
-        if [[ "$current_ip" == "$ip" && "$current_date_sec" -le "$expiry_date_sec" ]]; then
-            verified=true
-            break
-        fi
-    done
-
-    if $verified; then
-        echo "————————————————————————————————————"
-        echo "           Success Message !!"
-        echo "————————————————————————————————————"
-        echo "       IP ANDA TERVERIFIKASI ✓"
-        echo "————————————————————————————————————"
-    else
-        echo "————————————————————————————————————"
-        echo "           Error Message !!"
-        echo "————————————————————————————————————"
-        echo "     Anda Belum Terdaftar Untuk"
-        echo "   Menggunakan Script ini. Silahkan"
-        echo "            Registrasi ke"
-        echo "  Tele : Sanmaxx | Wa : 085155208019"
-        echo "————————————————————————————————————"
-        exit 1
-    fi
-}
-
 mkdir -p /usr/local/etc/xray/config >> /dev/null 2>&1
-
-# === [VERIFIKASI PENGGUNA] ===
-while true; do
-    echo "Pilih tipe pengguna:"
-    echo "1. Owner SC"
-    echo "2. Pengguna"
-    read -p "Masukkan pilihan Anda (1/2): " pilihan
-
-    if [ "$pilihan" == "1" ]; then
-        read -sp "Masukkan Password Owner: " password
-        echo
-        if [ "$password" == "@sandi" ]; then
-            echo "Selamat Datang Tuan"
-            touch /usr/local/etc/xray/admin
-            sleep 2
-            break
-        else
-            echo "Password Salah, Jika Kamu Pengguna Silahkan Memilih Opsi No.2"
-        fi
-    elif [ "$pilihan" == "2" ]; then
-        verif_ip
-        break
-    else
-        echo "Pilihan tidak valid. Silakan coba lagi."
-    fi
-done
 
 # === [INPUT DOMAIN] ===
 mkdir -p /usr/local/etc/xray/config /usr/local/etc/xray/dns >> /dev/null 2>&1
 touch /usr/local/etc/xray/dns/domain
 
-validate_domain() {
-    local domain=$1
-    [[ $domain =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]
-}
+read -p "Masukkan Domain : " dns
 
-input_domain() {
-    while true; do
-        read -rp "Input domain kamu: " -e dns
-        if [ -z "$dns" ]; then
-            echo "Tidak ada input untuk domain!"
-        elif ! validate_domain "$dns"; then
-            echo "Format domain tidak valid! Silakan input domain yang valid."
-        else
-            echo "$dns" > /usr/local/etc/xray/dns/domain
-            echo "DNS=$dns" > /var/lib/dnsvps.conf
-            break
-        fi
-    done
-}
-
-echo "————————————————————————————————————————————————————————"
-echo "                      SETUP DOMAIN"
-echo "————————————————————————————————————————————————————————"
-input_domain
+echo "$dns" > /usr/local/etc/xray/dns/domain
+echo "DNS=$dns" > /var/lib/dnsvps.conf
+            
 
 # === [INSTAL DEPENDENSI DASAR] ===
 echo "Setup Domain Done"
